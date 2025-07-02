@@ -1,0 +1,23 @@
+{
+  "text.autoconfig.locator-heads.title": "Locator Heads Settings",
+  "text.autoconfig.locator-heads.option.enableMod": "Enable Mod",
+  "text.autoconfig.locator-heads.option.enableMod.@Tooltip": "Toggle the entire mod on/off",
+  "text.autoconfig.locator-heads.option.enableTeamBorder": "Enable Team Border",
+  "text.autoconfig.locator-heads.option.enableTeamBorder.@Tooltip": "Show colored borders around player heads based on their team",
+  "text.autoconfig.locator-heads.option.teamBorderThickness": "Team Border Thickness",
+  "text.autoconfig.locator-heads.option.teamBorderThickness.@Tooltip": "Border thickness in pixels (0.3-2.0)",
+  "text.autoconfig.locator-heads.option.showPlayerNames": "Show Player Names",
+  "text.autoconfig.locator-heads.option.showPlayerNames.@Tooltip": "Choose when to display player names above their heads",
+  "text.autoconfig.locator-heads.option.showPlayerNames.OFF": "Never",
+  "text.autoconfig.locator-heads.option.showPlayerNames.ALWAYS": "Always",
+  "text.autoconfig.locator-heads.option.showPlayerNames.LOOKING_AT": "When Looking At",
+  "text.autoconfig.locator-heads.option.playerFilterMode": "Player Filter Mode",
+  "text.autoconfig.locator-heads.option.playerFilterMode.@Tooltip": "Choose which players to show heads for",
+  "text.autoconfig.locator-heads.option.includedPlayers": "Included Players",
+  "text.autoconfig.locator-heads.option.includedPlayers.@Tooltip": "Enter player names separated by commas (e.g., Player1,Player2,Player3)",
+  "text.autoconfig.locator-heads.option.excludedPlayers": "Excluded Players",
+  "text.autoconfig.locator-heads.option.excludedPlayers.@Tooltip": "Enter player names separated by commas (e.g., Player1,Player2,Player3)",
+  "text.autoconfig.locator-heads.option.playerFilterMode.ALL": "All Players",
+  "text.autoconfig.locator-heads.option.playerFilterMode.INCLUDE": "Include Only",
+  "text.autoconfig.locator-heads.option.playerFilterMode.EXCLUDE": "Exclude Only"
+}

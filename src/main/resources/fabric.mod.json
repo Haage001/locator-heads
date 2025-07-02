@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "locator-heads",
+	"version": "${version}",
+	"name": "Locator Heads",
+	"description": "Replaces waypoint icons with player heads in the locator bar. Shows real player skins with configurable team borders and smart name display options.",
+	"authors": [
+		"Haage"
+	],
+	"contributors": [
+		"MCRcortex (original concept)"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/project/locator-heads",
+		"sources": "https://github.com/Haage001/locator-heads",
+		"issues": "https://github.com/Haage001/locator-heads/issues"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/locator-heads/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"haage.LocatorHeads"
+		],
+		"modmenu": [
+			"haage.config.ModMenuIntegration"
+		],
+		"fabric-datagen": [
+			"haage.LocatorHeadsDataGenerator"
+		]
+	},
+	"mixins": [
+		"locator-heads.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.7",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*",
+		"cloth-config": "*"
+	}
+}

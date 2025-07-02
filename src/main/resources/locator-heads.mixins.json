@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "haage.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"LocatorBarRendererMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
