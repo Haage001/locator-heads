@@ -14,7 +14,7 @@
 ## 🎭 Player Head Display
 
 - **Real Player Skins**  
-  Shows actual player heads with their custom skins instead of generic waypoint icons.  
+  Shows player skins instead of generic waypoint icons.  
 - **Hat Layer Support**  
   Displays both the base skin layer and hat/helmet overlay for complete skin representation.  
 - **Distance-Based Scaling**  
@@ -25,18 +25,16 @@
 ## 🎨 Team Border System
 
 - **Configurable Team Borders**  
-  Adds colored borders around player heads based on their team color.  
+  Adds coloured borders around player heads based on their team colour.  
 - **Multiple Border Thickness Options**  
   - **Thin (0.3px)**  
   - **Medium (0.5px)**  
   - **Normal (1.0px)** _Default_  
   - **Thick (2.0px)**  
-- **Smart Color Detection**  
-  Automatically detects team colors from the scoreboard.  
+- **Colour Detection**  
+  Automatically detects team colours  from the scoreboard.  
 - **Toggle Option**  
   Can be completely disabled if you prefer clean heads without borders.
-
----
 
 <p align="center">
   <img
@@ -50,14 +48,13 @@
 
 ## 📝 Player Name Display
 
-Choose when to show player names above their heads:
-
-- **Never**  
-  Clean display with only heads. _Default_  
-- **Always**  
-  Names permanently visible above all player heads.  
-- **When Looking At**  
-  Names only appear when you're looking directly at a player (within a 30° cone).
+Choose when to show player names above their heads, when within simulation distance:
+  - **Never:** _Default_ <br>
+    No names on locator bar  
+  - **Always:** <br>
+    Names permanently visible above all player heads
+  - **Looking At:** <br>
+    Names only appear when you're looking in the direction of a player (within a 30° cone.
 
 ---
 
