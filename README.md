@@ -20,6 +20,14 @@
 - **Distance-Based Scaling**  
   Player heads scale naturally with distance, just like vanilla waypoints.
 
+<p align="center">
+  <img
+    src="https://cdn.modrinth.com/data/cached_images/47abf66f7bc76e0829011f30e4b9c8dff5534d58.png"
+    alt="Heads"
+    width="700"
+  />
+</p>
+
 ---
 
 ## 🎨 Team Border System
@@ -38,11 +46,12 @@
 
 <p align="center">
   <img
-    src="https://cdn.modrinth.com/data/cached_images/9f851cbcc07134f303422e683a5c4531c923c8e7.png"
-    alt="Player head example"
-    width="300"
+    src="https://cdn.modrinth.com/data/cached_images/034086bbf3454d124e3b3485b9af49f3c2f167dd.png"
+    alt="Team Border"
+    width="700"
   />
 </p>
+
 
 ---
 
@@ -55,6 +64,14 @@ Choose when to show player names above their heads, when within simulation dista
     Names permanently visible above all player heads
   - **Looking At:** <br>
     Names only appear when you're looking in the direction of a player (within a 30° cone.
+
+<p align="center">
+  <img
+    src="https://cdn.modrinth.com/data/cached_images/1909f85865dee0167f2a8097888227b99323b9f0.png"
+    alt="Names"
+    width="700"
+  />
+</p>
 
 ---
 
@@ -122,3 +139,14 @@ Control which players heads appear in your locator bar:
 ## 👥 Credits
 
 Original concept and code for rendering heads: [MCRcortex](https://github.com/MCRcortex/)
+
+
+
+
+
+
+
+
+
+
+
