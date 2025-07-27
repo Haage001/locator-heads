@@ -84,13 +84,16 @@ public class LocatorBarRendererMixin {
             return; // Skip rendering entirely - no head, no vanilla icon
         }
 
-        if (this.locatorHeads$skinOverride == null || LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod) {
+        if (this.locatorHeads$skinOverride == null || LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod || !LocatorHeads.CONFIG.renderHeads) {
             // No skin override, config not loaded, or mod disabled - render original icon
             guiGraphics.blitSprite(renderPipeline, originalIcon, x, y, width, height, depth);
         } else {
             // Render player head with configurable team-colored border
             this.locatorHeads$renderPlayerHead(guiGraphics, x, y, width, height);
         }
+        // Render player name independent of head sprite
+        this.locatorHeads$renderPlayerName(guiGraphics, x, y, width);
+
         // Clear the override after use
         this.locatorHeads$skinOverride = null;
     }
@@ -167,6 +170,11 @@ public class LocatorBarRendererMixin {
             centerX + scaledWidth, centerY + scaledHeight,
             5f/8, 6f/8, 1f/8, 2f/8);
 
+        guiGraphics.pose().popMatrix();
+    }
+
+    @Unique
+    private void locatorHeads$renderPlayerName(GuiGraphics guiGraphics, int x, int y, int width) {
         // ===== PLAYER NAME RENDERING WITH BIDIRECTIONAL ANIMATION =====
         boolean shouldShowName = locatorHeads$shouldShowPlayerName();
         boolean isAnimating = locatorHeads$nameAnimationStartTimes.containsKey(this.locatorHeads$playerName);
@@ -198,8 +206,6 @@ public class LocatorBarRendererMixin {
 
         // Render name with animation (fade in, fade out, or static)
         if ((shouldShowName || isAnimating) && this.locatorHeads$playerName != null) {
-            guiGraphics.pose().popMatrix(); // Exit the 0.01 scale for text rendering
-
             long currentTime = System.currentTimeMillis();
             long animationStartTime = locatorHeads$nameAnimationStartTimes.get(this.locatorHeads$playerName);
             long elapsedTime = currentTime - animationStartTime;
@@ -221,7 +227,7 @@ public class LocatorBarRendererMixin {
 
             // Calculate text position (above the head) - adjust for scaled head size
             int textX = x + (width / 2);
-            int baseTextY = y - (int)(12 * sizeMultiplier); // Base position above head
+            int baseTextY = y - (int)(12 * LocatorHeads.CONFIG.getHeadSizeMultiplier()); // Base position above head
 
             // Animation: slide up/down based on progress
             int animationOffset = (int)(20 * (1.0f - easedProgress));
@@ -257,11 +263,7 @@ public class LocatorBarRendererMixin {
                 locatorHeads$nameAnimationDirection.remove(this.locatorHeads$playerName);
             }
 
-            guiGraphics.pose().pushMatrix(); // Re-enter the scale for cleanup
-            guiGraphics.pose().scale(0.01f);
         }
-
-        guiGraphics.pose().popMatrix();
     }
 
     @Unique

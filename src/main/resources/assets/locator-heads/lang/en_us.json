@@ -4,6 +4,8 @@
   "text.autoconfig.locator-heads.category.playerFiltering": "Player Filtering",
   "text.autoconfig.locator-heads.option.enableMod": "Enable Mod",
   "text.autoconfig.locator-heads.option.enableMod.@Tooltip": "Toggle the entire mod on/off",
+  "text.autoconfig.locator-heads.option.renderHeads": "Render Heads",
+  "text.autoconfig.locator-heads.option.renderHeads.@Tooltip": "Display player heads instead of a coloured dot",
   "text.autoconfig.locator-heads.option.enableTeamBorder": "Enable Team Border",
   "text.autoconfig.locator-heads.option.enableTeamBorder.@Tooltip": "Show colored borders around player heads based on their team",
   "text.autoconfig.locator-heads.option.teamBorderThickness": "Team Border Thickness",
