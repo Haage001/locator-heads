@@ -13,75 +13,88 @@
 
 ## 🎭 Player Head Display
 
-- **Real Player Skins**  
-  Shows actual player heads with their custom skins instead of generic waypoint icons.  
-- **Hat Layer Support**  
-  Displays both the base skin layer and hat/helmet overlay for complete skin representation.  
+- **Player Skins**  
+  Displays each player’s skin instead of the default waypoint icon.
 - **Distance-Based Scaling**  
-  Player heads scale naturally with distance, just like vanilla waypoints.
+  Heads scale dynamically with distance—just like vanilla waypoints.
+- **Resizable Heads**  
+  Adjust the size of player heads to your preference.
+
+<div align="center">
+  <img
+    src="https://cdn.modrinth.com/data/cached_images/47abf66f7bc76e0829011f30e4b9c8dff5534d58.png"
+    alt="Player Heads"
+    width="700"
+  />
+</div>
 
 ---
 
 ## 🎨 Team Border System
 
-- **Configurable Team Borders**  
-  Adds colored borders around player heads based on their team color.  
-- **Multiple Border Thickness Options**  
-  - **Thin (0.3px)**  
-  - **Medium (0.5px)**  
-  - **Normal (1.0px)** _Default_  
-  - **Thick (2.0px)**  
-- **Smart Color Detection**  
-  Automatically detects team colors from the scoreboard.  
-- **Toggle Option**  
-  Can be completely disabled if you prefer clean heads without borders.
+- **Customizable Borders**  
+  Add colored outlines around player heads based on their team colour.
+- **Border Thickness**  
+  Choose from four presets:
+  - `Thin (0.3px)`
+  - `Medium (0.5px)`
+  - `Normal (1.0px)` _(default)_
+  - `Thick (2.0px)`
+- **Automatic Colour Detection**  
+  Pulls team colours directly from the scoreboard.
+- **Toggleable**  
+  Enable or disable borders as needed.
 
----
-
-<p align="center">
+<div align="center">
   <img
-    src="https://cdn.modrinth.com/data/cached_images/9f851cbcc07134f303422e683a5c4531c923c8e7.png"
-    alt="Player head example"
-    width="300"
+    src="https://cdn.modrinth.com/data/cached_images/034086bbf3454d124e3b3485b9af49f3c2f167dd.png"
+    alt="Team Borders"
+    width="700"
   />
-</p>
+</div>
 
 ---
 
 ## 📝 Player Name Display
 
-Choose when to show player names above their heads:
+Control when player names appear above heads (within simulation range):
 
-- **Never**  
-  Clean display with only heads. _Default_  
-- **Always**  
-  Names permanently visible above all player heads.  
-- **When Looking At**  
-  Names only appear when you're looking directly at a player (within a 30° cone).
+| Option         | Description                                                      |
+| -------------- | ---------------------------------------------------------------- |
+| **Never**      | _(default)_ No names on the locator bar.                         |
+| **Always**     | Names permanently visible above all player heads.                |
+| **Looking At** | Names appear only when you look within a 30° cone at a player.   |
+| **Player List**| Names show when the in-game player list is open.                 |
+
+**Name Colouring**  
+If team borders are enabled, names will adopt the corresponding team colour automatically.
+
+<div align="center">
+  <img
+    src="https://cdn.modrinth.com/data/cached_images/1909f85865dee0167f2a8097888227b99323b9f0.png"
+    alt="Player Names"
+    width="700"
+  />
+</div>
 
 ---
 
 ## 🎯 Advanced Player Filtering
 
-Control which players heads appear in your locator bar:
+choose whose heads appear on your locator bar, both heads and vanilla waypoints:
 
-- **All Players**  
-  Show everyone. _Default_  
+- **All Players** _(default)_  
+  Show everyone.
 - **Include Only**  
-  Show only specific players from your custom list.  
+  Display only the players listed in your filter.
 - **Exclude Only**  
-  Hide specific players while showing everyone else.
+  Hide only the players listed, showing all others.
 
-(excluded players appear normally on the locator bar as a coloured dot)
+**Filter Syntax**  
+- Separate names by commas (`,`), semicolons (`;`), colons (`:`), or periods (`.`).  
 
-### 🔧 Filter Configuration
-
-- **Comma-Separated Lists**  
-  Enter player names separated by commas, semicolons, colons, or periods.  
-- **Non Case-Insensitive**  
-  Player name matching ignores capitalization.  
-- **Example**  
-  ``Player1, Player2, Player3`` or ``Notch; Dinnerbone: Grumm``
+> **Example:**  
+> ``Jeb_, Dinnerbone; LadyAgnes``
 
 ---
 
@@ -96,9 +109,7 @@ Control which players heads appear in your locator bar:
     width="80"
     loading="lazy"
   />
-</a>
-
-### Optional (Recommended)
+</a>  
 
 <a href="https://modrinth.com/mod/cloth-config">
   <img
@@ -107,7 +118,10 @@ Control which players heads appear in your locator bar:
     width="80"
     loading="lazy"
   />
-</a>
+</a>  
+
+### Optional (Recommended)
+
 <a href="https://modrinth.com/mod/modmenu">
   <img
     src="https://cdn.modrinth.com/data/cached_images/09f9500c73623d8ee3d3608dba843f86e94c1f5e_0.webp"
@@ -115,13 +129,10 @@ Control which players heads appear in your locator bar:
     width="80"
     loading="lazy"
   />
-</a>
-
-
+</a>  
 
 ---
 
-
 ## 👥 Credits
 
-Original concept and code for rendering heads: [MCRcortex](https://github.com/MCRcortex/)
+- **Original Head Rendering Concept & Code:** [MCRcortex](https://github.com/MCRcortex)  
