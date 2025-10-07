@@ -8,8 +8,10 @@ import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.client.resources.WaypointStyle;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.waypoints.PartialTickSupplier;
 import net.minecraft.world.waypoints.TrackedWaypoint;
 import net.minecraft.world.waypoints.Waypoint;
 import org.spongepowered.asm.mixin.Final;
@@ -34,7 +36,7 @@ public class LocatorBarRendererMixin {
     @Unique private static final int locatorHeads$ANIMATION_DURATION_MS = 150; // ms
 
     @Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIIII)V", shift = At.Shift.BEFORE))
-    private void locatorHeads$captureWaypointForSkinRender(Level level, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci) {
+    private void locatorHeads$captureWaypointForSkinRender(Entity entity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci) {
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod) {
             this.locatorHeads$shouldHideWaypoint = false;
             return;
@@ -49,15 +51,16 @@ public class LocatorBarRendererMixin {
         if (connection != null && trackedWaypoint.id().left().isPresent()) {
             var playerInfo = connection.getPlayerInfo(trackedWaypoint.id().left().get());
             if (playerInfo != null) {
-                String playerName = playerInfo.getProfile().getName();
+                String playerName = playerInfo.getProfile().name();
                 if (!locatorHeads$shouldShowPlayerHead(playerName)) { // filter hides completely
                     this.locatorHeads$shouldHideWaypoint = true;
                     return;
                 }
                 this.locatorHeads$playerName = playerName;
-                this.locatorHeads$skinOverride = Minecraft.getInstance().getSkinManager().getInsecureSkin(playerInfo.getProfile()).texture();
+                this.locatorHeads$skinOverride = playerInfo.getSkin().body().texturePath();
+
                 if (level != null) {
-                    PlayerTeam team = level.getScoreboard().getPlayersTeam(playerInfo.getProfile().getName());
+                    PlayerTeam team = level.getScoreboard().getPlayersTeam(playerInfo.getProfile().name());
                     if (team != null && team.getColor().getColor() != null) {
                         this.locatorHeads$teamColor = team.getColor().getColor();
                     }
@@ -81,7 +84,7 @@ public class LocatorBarRendererMixin {
     private void locatorHeads$renderPlayerHead(GuiGraphics guiGraphics, int x, int y, int width, int height) {
         if (LocatorHeads.CONFIG == null || LocatorHeads.CONFIG.teamBorderThickness == null) return;
 
-        float distance = Mth.sqrt((float)this.locatorHeads$currentWaypoint.distanceSquared(this.minecraft.cameraEntity));
+        float distance = Mth.sqrt((float)this.locatorHeads$currentWaypoint.distanceSquared(this.minecraft.getCameraEntity()));
         Waypoint.Icon icon = this.locatorHeads$currentWaypoint.icon();
         WaypointStyle style = this.minecraft.getWaypointStyles().get(icon.style);
         float progress = 1 - Mth.clamp((distance - style.nearDistance()) / (style.farDistance() - style.nearDistance()), 0, 1);
@@ -228,15 +231,15 @@ public class LocatorBarRendererMixin {
 
     @Unique
     private boolean locatorHeads$isLookingAtPlayer() {
-        if (this.locatorHeads$currentWaypoint == null || this.minecraft.cameraEntity == null) return false;
+        if (this.locatorHeads$currentWaypoint == null || this.minecraft.getCameraEntity() == null) return false;
         var connection = Minecraft.getInstance().getConnection();
         if (connection == null || this.locatorHeads$currentWaypoint.id().left().isEmpty()) return false;
         var playerInfo = connection.getPlayerInfo(this.locatorHeads$currentWaypoint.id().left().get());
         if (playerInfo == null) return false;
         var level = this.minecraft.level; if (level == null) return false;
-        var target = level.getPlayerByUUID(playerInfo.getProfile().getId()); if (target == null) return false;
-        var cameraPos = this.minecraft.cameraEntity.position();
-        var look = this.minecraft.cameraEntity.getViewVector(1.0f);
+        var target = level.getPlayerByUUID(playerInfo.getProfile().id()); if (target == null) return false;
+        var cameraPos = this.minecraft.getCameraEntity().position();
+        var look = this.minecraft.getCameraEntity().getViewVector(1.0f);
         var dir = target.position().subtract(cameraPos).normalize();
         double dot = look.dot(dir);
         double threshold = Math.cos(Math.toRadians(20));
