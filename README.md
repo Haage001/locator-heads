@@ -1,97 +1,90 @@
 <p align="center">
-<a href="https://haage.dev">
-  <img
-src="https://cdn.modrinth.com/data/cached_images/44ff730831c4cd4353c5f7bd9c9bf809417e83d3.png"    alt="website"
-    width="750"
-    loading="lazy"
-  />
-</a>
+  <a href="https://www.haagensen.me">
+    <img
+      src="https://cdn.modrinth.com/data/cached_images/b811a708d2a8f791cf233906b023325b01812d2e.png"
+      alt="haagensen.me"
+      width="750"
+      loading="lazy"
+    />
+  </a>
 </p>
 
 ---
 
-## 🎭 General Settings
+## 🎭 Player Head Display
 
-- Enable/Disable Mod
-  Chose weather or not mod is on or off.
-- Render Heads
-  Choose if you want heads to be rendered (can be used to only show names)
-- Head Size
-  Change the size of the heads
-- Show Player Names
+- **Player Skins**  
+  Displays each player’s skin instead of the default waypoint icon.
+- **Distance-Based Scaling**  
+  Heads scale dynamically with distance—just like vanilla waypoints.
+- **Resizable Heads**  
+  Adjust the size of player heads to your preference.
 
 <div align="center">
+  <img
+    src="https://cdn.modrinth.com/data/cached_images/47abf66f7bc76e0829011f30e4b9c8dff5534d58.png"
+    alt="Player Heads"
+    width="700"
+  />
+</div>
 
-| Player Name Option | Description                                                      |
+---
+
+## 🎨 Team Border System
+
+- **Customizable Borders**  
+  Add colored outlines around player heads based on their team colour.
+- **Border Thickness**  
+  Choose from four presets:
+  - `Thin (0.3px)`
+  - `Medium (0.5px)`
+  - `Normal (1.0px)` _(default)_
+  - `Thick (2.0px)`
+- **Automatic Colour Detection**  
+  Pulls team colours directly from the scoreboard.
+- **Toggleable**  
+  Enable or disable borders as needed.
+
+<div align="center">
+  <img
+    src="https://cdn.modrinth.com/data/cached_images/034086bbf3454d124e3b3485b9af49f3c2f167dd.png"
+    alt="Team Borders"
+    width="700"
+  />
+</div>
+
+---
+
+## 📝 Player Name Display
+
+Control when player names appear above heads (within simulation range):
+
+| Option         | Description                                                      |
 | -------------- | ---------------------------------------------------------------- |
-| **Never**      | No names on the locator bar. _(default)_                         |
+| **Never**      | _(default)_ No names on the locator bar.                         |
 | **Always**     | Names permanently visible above all player heads.                |
-| **Looking At** | Names appear only when you look within a 30°                     |
+| **Looking At** | Names appear only when you look within a 30° cone at a player.   |
 | **Player List**| Names show when the in-game player list is open.                 |
 
-  <img
- src="https://cdn.modrinth.com/data/cached_images/47abf66f7bc76e0829011f30e4b9c8dff5534d58.png"
-    alt="Player Heads"
-    width="700"
-  />
-
-**▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬**
- 
-  <img
-src="https://cdn.modrinth.com/data/cached_images/e3308f20361463ee70042def49dfee8552781e9e.png"
-    alt="Player Heads"
-    width="700"
-  />
-  
-**▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬**
-  
-  <img
-src="https://cdn.modrinth.com/data/cached_images/6f16df9986b3693c2b18fe8f717cf0abd507496e.png"
-    alt="Player Heads"
-    width="700"
-  />
-</div>
-
----
-
-## 🎨 Borders
-
-- Enable Border
-  If enabled the border is on
-- Border Thickness
-  How many pixels thick the border should be
-- Border Style
-  Can be eithere "TEAM_COLOUR" or "STATIC_COLOUR"
-- Static Border Colour
-  Choose what colour the static border will have
-
+**Name Colouring**  
+If team borders are enabled, names will adopt the corresponding team colour automatically.
 
 <div align="center">
   <img
- src="https://cdn.modrinth.com/data/cached_images/034086bbf3454d124e3b3485b9af49f3c2f167dd.png"
-    alt="Team Borders"
+    src="https://cdn.modrinth.com/data/cached_images/1909f85865dee0167f2a8097888227b99323b9f0.png"
+    alt="Player Names"
     width="700"
   />
-
-**▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬**
-
-  <img
- src="https://cdn.modrinth.com/data/cached_images/bffca3348bf2778ea64dd9b5540db6312a69a82c.png"
-    alt="Team Borders"
-    width="700"
-  />
-  
 </div>
 
 ---
-
 
 ## 🎯 Advanced Player Filtering
 
-choose who appear on your locator bar:
+choose whose heads appear on your locator bar, both heads and vanilla waypoints:
 
 - **All Players** _(default)_  
-  Shows everyone.
+  Show everyone.
 - **Include Only**  
   Display only the players listed in your filter.
 - **Exclude Only**  
@@ -102,18 +95,6 @@ choose who appear on your locator bar:
 
 > **Example:**  
 > ``Jeb_, Dinnerbone; LadyAgnes``
-
-
-
-<div align="center">
-  
-  <img
- src="https://cdn.modrinth.com/data/cached_images/b9f6657672214ebf3b27ac5d9735f28e1b34762a.png"
-    alt="Filter"
-    width="700"
-  />
-  
-</div>
 
 ---
 
