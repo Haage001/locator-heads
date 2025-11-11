@@ -15,6 +15,10 @@ public class LocatorHeadsConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean renderHeads = true;
 
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip(count = 1)
+    public boolean alwaysShowXP = false;
+
     @ConfigEntry.Category("borders")
     @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean enableTeamBorder = false;

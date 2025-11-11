@@ -3,6 +3,8 @@
 	"package": "haage.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"ExperienceBarRendererMixin",
+		"GuiMixin",
 		"LocatorBarRendererMixin"
 	],
 	"injectors": {

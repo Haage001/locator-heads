@@ -7,6 +7,8 @@
   "text.autoconfig.locator-heads.option.enableMod.@Tooltip": "Toggle the entire mod on/off",
   "text.autoconfig.locator-heads.option.renderHeads": "Render Heads",
   "text.autoconfig.locator-heads.option.renderHeads.@Tooltip": "Toggle rendering of player head icons (names may still show)",
+  "text.autoconfig.locator-heads.option.alwaysShowXP": "Always Show XP Bar",
+  "text.autoconfig.locator-heads.option.alwaysShowXP.@Tooltip": "Always show the XP bar even when the locator bar is active",
   "text.autoconfig.locator-heads.option.enableTeamBorder": "Enable Team Border",
   "text.autoconfig.locator-heads.option.enableTeamBorder.@Tooltip": "Show colored borders around player heads based on their team or a static color",
   "text.autoconfig.locator-heads.option.teamBorderThickness": "Team Border Thickness",
