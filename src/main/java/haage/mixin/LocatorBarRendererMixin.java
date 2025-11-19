@@ -110,7 +110,7 @@ public class LocatorBarRendererMixin {
                 }
             } else if (LocatorHeads.CONFIG.borderStyle == haage.config.LocatorHeadsConfig.BorderStyle.STATIC_COLOR) {
                 shouldRenderBorder = true;
-                borderColor = LocatorHeads.CONFIG.staticBorderColor.getColor();
+                borderColor = LocatorHeads.CONFIG.staticBorderColor;
             }
         }
 
@@ -176,7 +176,7 @@ public class LocatorBarRendererMixin {
                         textColor = (alpha << 24) | 0xFFFFFF; // no team -> default white, no tint
                     }
                 } else if (LocatorHeads.CONFIG.borderStyle == haage.config.LocatorHeadsConfig.BorderStyle.STATIC_COLOR) {
-                    textColor = (alpha << 24) | (LocatorHeads.CONFIG.staticBorderColor.getColor() & 0xFFFFFF);
+                    textColor = (alpha << 24) | (LocatorHeads.CONFIG.staticBorderColor & 0xFFFFFF);
                 } else {
                     textColor = (alpha << 24) | 0xFFFFFF;
                 }

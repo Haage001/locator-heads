@@ -28,6 +28,7 @@ public abstract class ExperienceBarRendererMixin {
      * Injects after the experience bar has finished rendering.
      * If the "Always Show XP" config option is enabled, this will additionally
      * render the locator bar overlay, allowing both UI elements to be visible simultaneously.
+     * Also renders the compass if enabled.
     
      @param guiGraphics The graphics context for rendering
      @param deltaTracker The delta tracker for animation timing

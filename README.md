@@ -8,9 +8,25 @@ src="https://cdn.modrinth.com/data/cached_images/44ff730831c4cd4353c5f7bd9c9bf80
 </a>
 </p>
 
+# Locator Heads 
+is a client-side Minecraft mod that displays nearby players as heads on your XP bar, making it easy to track their location and direction at a glance. Customize colors, borders, filtering options, and add a compass overlay to enhance your multiplayer experience.
+
+<div align="center">
+  <img src="https://cdn.modrinth.com/data/cached_images/47abf66f7bc76e0829011f30e4b9c8dff5534d58.png" width="700" />
+  
+**▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬**
+
+  <img src="https://cdn.modrinth.com/data/cached_images/a51701d2a35035a3f31e8c975dc0e482a610a801.png" width="700" />
+  
+**▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬**
+
+  <img src="https://cdn.modrinth.com/data/cached_images/e3308f20361463ee70042def49dfee8552781e9e.png" width="700" />
+</div>
+
 ---
 
-## 🎭 General Settings
+<details>
+<summary><h2>🎭 General Settings</h2></summary>
 
 - Enable/Disable Mod
   Chose weather or not mod is on or off.
@@ -55,15 +71,46 @@ src="https://cdn.modrinth.com/data/cached_images/e3308f20361463ee70042def49dfee8
 **▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬**
   
   <img
-src="https://cdn.modrinth.com/data/cached_images/6f16df9986b3693c2b18fe8f717cf0abd507496e.png"
+src="https://cdn.modrinth.com/data/cached_images/d8d7b61b70d561e5a4e591dab57fcdd8462c3366.png"
     alt="Player Heads"
     width="700"
   />
 </div>
 
----
+</details>
 
-## 🎨 Borders
+
+
+<details>
+<summary><h2>🧭 Compass</h2></summary>
+
+- Show Compass
+  Toggle the compass overlay on or off
+- Compass Colour
+  Customize the color of the compass direction letters using hex color picker
+- Compass Shadow
+  Toggle black outline around compass letters for better visibility
+
+<div align="center">
+  <img
+ src="https://cdn.modrinth.com/data/cached_images/a51701d2a35035a3f31e8c975dc0e482a610a801.png"
+    width="700"
+  />
+
+**▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬**
+
+  <img
+ src="https://cdn.modrinth.com/data/cached_images/cf2357892740f9de2b682d0c76d589bf4c5d70d7.png"
+    width="700"
+  />
+</div>
+
+</details>
+
+
+
+<details>
+<summary><h2>🎨 Borders</h2></summary>
 
 - Enable Border
   If enabled the border is on
@@ -92,10 +139,12 @@ src="https://cdn.modrinth.com/data/cached_images/6f16df9986b3693c2b18fe8f717cf0a
   
 </div>
 
----
+</details>
 
 
-## 🎯 Advanced Player Filtering
+
+<details>
+<summary><h2>🎯 Advanced Player Filtering</h2></summary>
 
 choose who appear on your locator bar:
 
@@ -124,6 +173,8 @@ choose who appear on your locator bar:
   
 </div>
 
+</details>
+
 ---
 
 ## 🔗 Dependencies
@@ -134,7 +185,7 @@ choose who appear on your locator bar:
   <img
     src="https://cdn.modrinth.com/data/cached_images/b541ef52cf8c8e8d990ac261f745a0d405896096.png"
     alt="Fabric API"
-    width="80"
+    width="100"
     loading="lazy"
   />
 </a>  
@@ -143,7 +194,7 @@ choose who appear on your locator bar:
   <img
     src="https://cdn.modrinth.com/data/cached_images/88b60d015c0aa162a0143002060268947969c975_0.webp"
     alt="Cloth Config API"
-    width="80"
+    width="100"
     loading="lazy"
   />
 </a>  
@@ -154,7 +205,7 @@ choose who appear on your locator bar:
   <img
     src="https://cdn.modrinth.com/data/cached_images/09f9500c73623d8ee3d3608dba843f86e94c1f5e_0.webp"
     alt="Mod Menu"
-    width="80"
+    width="100"
     loading="lazy"
   />
 </a>  
@@ -164,4 +215,15 @@ choose who appear on your locator bar:
 ## 👥 Credits
 
 - **Original Head Rendering Concept & Code:** [MCRcortex](https://github.com/MCRcortex) and their mod **facebar**
-- **Help with the 1.21.9/10 update:** [Lemonszz](https://github.com/Lemonszz) and [aport73](https://github.com/aport73)
+- **Update Help:**
+  - **1.21.9:** [Lemonszz](https://github.com/Lemonszz)
+  - **1.21.10:** [aport73](https://github.com/aport73)
+
+<details>
+<summary><strong>Feature Requests</strong></summary>
+
+- **Always show XP bar:** [TechPro424](https://github.com/TechPro424)
+- **Static border:** [Starrider37](https://github.com/Starrider37)
+- **Compass:** [Zedaph](https://www.youtube.com/channel/UCPK5G4jeoVEbUp5crKJl6CQ)
+
+</details>
