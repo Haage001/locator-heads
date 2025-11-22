@@ -41,6 +41,11 @@ public class GuiMixin {
             return;
         }
         
+        // Hide compass when UI is hidden (F1 pressed)
+        if (this.minecraft.options.hideGui) {
+            return;
+        }
+        
         if (this.minecraft.getCameraEntity() == null) {
             return;
         }
