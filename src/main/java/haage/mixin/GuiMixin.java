@@ -24,7 +24,7 @@ public class GuiMixin {
      * Inject into the method that determines if the experience bar should be prioritized.
      * When alwaysShowXP is enabled, force it to return true so the XP bar is always shown.
      */
-    @Inject(method = "willPrioritizeExperienceInfo", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "*()Z", at = @At("RETURN"), cancellable = true)
     private void locatorHeads$alwaysShowExperienceBar(CallbackInfoReturnable<Boolean> cir) {
         if (LocatorHeads.CONFIG != null && LocatorHeads.CONFIG.alwaysShowXP) {
             cir.setReturnValue(true);
@@ -35,14 +35,14 @@ public class GuiMixin {
      * Renders the compass overlay on the locator bar position.
      * This is completely independent of the XP bar visibility.
      */
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "*", at = @At("RETURN"))
     private void locatorHeads$renderCompass(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod || !LocatorHeads.CONFIG.showCompass) {
             return;
         }
         
-        // Hide compass when UI is hidden (F1 pressed)
-        if (this.minecraft.options.hideGui) {
+        // Don't render if GUI is hidden (F1) or if a screen is open (ESC menu, etc.)
+        if (this.minecraft.options.hideGui || this.minecraft.screen != null) {
             return;
         }
         

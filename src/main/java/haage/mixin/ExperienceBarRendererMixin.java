@@ -34,7 +34,7 @@ public abstract class ExperienceBarRendererMixin {
      @param deltaTracker The delta tracker for animation timing
      @param ci Callback info for the injection
      */
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "*", at = @At("RETURN"))
     private void locatorHeads$addLocatorOverlayToExperienceBar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         // Only proceed if config is loaded and feature is enabled
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.alwaysShowXP) {

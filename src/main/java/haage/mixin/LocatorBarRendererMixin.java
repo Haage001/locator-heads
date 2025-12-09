@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.client.resources.WaypointStyle;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LocatorBarRenderer.class)
 public class LocatorBarRendererMixin {
     @Shadow @Final private Minecraft minecraft;
-    @Unique private ResourceLocation locatorHeads$skinOverride;
+    @Unique private Identifier locatorHeads$skinOverride;
     @Unique private TrackedWaypoint locatorHeads$currentWaypoint;
     @Unique private int locatorHeads$teamColor = 0xFFFFFF; // Default white
     @Unique private String locatorHeads$playerName = null;
@@ -35,7 +35,7 @@ public class LocatorBarRendererMixin {
     @Unique private static final java.util.Map<String, Boolean> locatorHeads$nameAnimationDirection = new java.util.HashMap<>(); // true = fade in
     @Unique private static final int locatorHeads$ANIMATION_DURATION_MS = 150; // ms
 
-    @Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIIII)V", shift = At.Shift.BEFORE))
+    @Inject(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", shift = At.Shift.BEFORE))
     private void locatorHeads$captureWaypointForSkinRender(Entity entity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci) {
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod) {
             this.locatorHeads$shouldHideWaypoint = false;
@@ -69,8 +69,8 @@ public class LocatorBarRendererMixin {
         }
     }
 
-    @Redirect(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIIII)V"))
-    private void locatorHeads$renderPlayerSkinInsteadOfIcon(GuiGraphics guiGraphics, RenderPipeline pipeline, ResourceLocation originalIcon, int x, int y, int w, int h, int d) {
+    @Redirect(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V"))
+    private void locatorHeads$renderPlayerSkinInsteadOfIcon(GuiGraphics guiGraphics, RenderPipeline pipeline, Identifier originalIcon, int x, int y, int w, int h, int d) {
         if (this.locatorHeads$shouldHideWaypoint) return;
         if (this.locatorHeads$skinOverride == null || LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod) {
             guiGraphics.blitSprite(pipeline, originalIcon, x, y, w, h, d);
