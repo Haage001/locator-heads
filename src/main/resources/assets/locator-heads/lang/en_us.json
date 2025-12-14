@@ -1,5 +1,6 @@
 {
   "text.autoconfig.locator-heads.title": "Locator Heads Settings",
+  "text.autoconfig.locator-heads.category.default": "General Settings",
   "text.autoconfig.locator-heads.category.general": "General Settings",
   "text.autoconfig.locator-heads.category.compass": "Compass",
   "text.autoconfig.locator-heads.category.playerFiltering": "Player Filtering",

@@ -1,76 +1,23 @@
 package haage.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+// Plain config class without Cloth Config dependencies
+// This allows the mod to work even when Cloth Config is not installed
+public class LocatorHeadsConfig {
 
-@Config(name = "locator-heads")
-public class LocatorHeadsConfig implements ConfigData {
-
-    @ConfigEntry.Category("general")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean enableMod = true;
-
-    @ConfigEntry.Category("general")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean renderHeads = true;
-
-    @ConfigEntry.Category("general")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean alwaysShowXP = false;
-
-    @ConfigEntry.Category("compass")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean showCompass = false;
-
-    @ConfigEntry.Category("compass")
-    @ConfigEntry.Gui.Tooltip(count = 1)
-    @ConfigEntry.ColorPicker
     public int compassColor = 0xFFFFFF;
-
-    @ConfigEntry.Category("compass")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean compassShadow = true;
-
-    @ConfigEntry.Category("borders")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean enableTeamBorder = false;
-
-    @ConfigEntry.Category("borders")
-    @ConfigEntry.Gui.Tooltip(count = 1)
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public BorderThickness teamBorderThickness = BorderThickness.NORMAL;
-
-    @ConfigEntry.Category("borders")
-    @ConfigEntry.Gui.Tooltip(count = 1)
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public BorderStyle borderStyle = BorderStyle.TEAM_COLOR;
-
-    @ConfigEntry.Category("borders")
-    @ConfigEntry.Gui.Tooltip(count = 1)
-    @ConfigEntry.ColorPicker
     public int staticBorderColor = 0xFFFFFF;
-
-    @ConfigEntry.Category("general")
-    @ConfigEntry.BoundedDiscrete(min = 1, max = 9)
     public int headSizeMultiplier = 5; // 5 = 1.0x, 1 = 0.5x, 9 = 1.5x
-
-    @ConfigEntry.Category("general")
-    @ConfigEntry.Gui.Tooltip(count = 1)
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public NameDisplayMode showPlayerNames = NameDisplayMode.OFF;
-
-    @ConfigEntry.Category("playerFiltering")
-    @ConfigEntry.Gui.Tooltip(count = 1)
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public PlayerFilterMode playerFilterMode = PlayerFilterMode.ALL;
-
-    @ConfigEntry.Category("playerFiltering")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public String includedPlayers = "";
-
-    @ConfigEntry.Category("playerFiltering")
-    @ConfigEntry.Gui.Tooltip(count = 1)
     public String excludedPlayers = "";
 
     // Helper method to get the actual multiplier value
