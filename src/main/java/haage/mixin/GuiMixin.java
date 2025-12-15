@@ -33,9 +33,9 @@ public class GuiMixin {
     
     /**
      * Renders the compass overlay on the locator bar position.
-     * This is completely independent of the XP bar visibility.
+     * Injects into the main render method to draw once per frame.
      */
-    @Inject(method = "*", at = @At("RETURN"))
+    @Inject(method = "render", at = @At("RETURN"))
     private void locatorHeads$renderCompass(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod || !LocatorHeads.CONFIG.showCompass) {
             return;
@@ -101,14 +101,15 @@ public class GuiMixin {
         
         // Draw the direction letter with optional black outline
         int textX = x - 2;
-        // Draw black outline if enabled
+        // Draw black outline if enabled (fades with the letter)
         if (LocatorHeads.CONFIG.compassShadow) {
-            guiGraphics.drawString(this.minecraft.font, direction, textX - 1, compassY, (alpha << 24), true);
-            guiGraphics.drawString(this.minecraft.font, direction, textX + 1, compassY, (alpha << 24), true);
-            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY - 1, (alpha << 24), true);
-            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY + 1, (alpha << 24), true);
+            int shadowColor = (alpha << 24); // Black with same alpha as letter
+            guiGraphics.drawString(this.minecraft.font, direction, textX - 1, compassY, shadowColor, false);
+            guiGraphics.drawString(this.minecraft.font, direction, textX + 1, compassY, shadowColor, false);
+            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY - 1, shadowColor, false);
+            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY + 1, shadowColor, false);
         }
         // Draw colored letter on top
-        guiGraphics.drawString(this.minecraft.font, direction, textX, compassY, color, true);
+        guiGraphics.drawString(this.minecraft.font, direction, textX, compassY, color, false);
     }
 }
