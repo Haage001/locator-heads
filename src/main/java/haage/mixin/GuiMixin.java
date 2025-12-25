@@ -5,6 +5,8 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,8 +43,15 @@ public class GuiMixin {
             return;
         }
         
-        // Don't render if GUI is hidden (F1) or if a screen is open (ESC menu, etc.)
-        if (this.minecraft.options.hideGui || this.minecraft.screen != null) {
+        // Don't render if GUI is hidden (F1) or if a screen is open (ESC menu, etc.), except for chat and inventory
+        if (this.minecraft.options.hideGui || (this.minecraft.screen != null && 
+                !(this.minecraft.screen instanceof ChatScreen) && 
+                !(this.minecraft.screen instanceof AbstractContainerScreen))) {
+            return;
+        }
+        
+        // Don't render if in Flashback replay mode
+        if (locatorHeads$isInFlashbackReplay()) {
             return;
         }
         
@@ -111,5 +120,22 @@ public class GuiMixin {
         }
         // Draw colored letter on top
         guiGraphics.drawString(this.minecraft.font, direction, textX, compassY, color, false);
+    }
+    
+    /**
+     * Checks if the player is currently in a Flashback replay.
+     * Uses reflection to avoid hard dependency on Flashback mod.
+     * @return true if in replay mode, false otherwise
+     */
+    private boolean locatorHeads$isInFlashbackReplay() {
+        try {
+            // Try to access Flashback's replay state
+            Class<?> flashbackClass = Class.forName("com.moulberry.flashback.Flashback");
+            Object isReplaying = flashbackClass.getMethod("isInReplay").invoke(null);
+            return (boolean) isReplaying;
+        } catch (Exception e) {
+            // Flashback not installed or method not found
+            return false;
+        }
     }
 }

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.6.3] - 2025-12-25
+### Added
+- Compass now automatically hides when viewing Flashback replays
+
+### Changed
+- Compass now stays visible when chat is open
+- Compass now stays visible when inventory is open
+
+### Fixed
+- None
+
 ## [1.6.2] - 2025-12-15
 ### Added
 - None
