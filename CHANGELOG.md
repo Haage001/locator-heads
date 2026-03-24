@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.0.0]
+### Added
+- None
+
+### Changed
+- Updated to Minecraft 26.1
+
+### Fixed
+- None
+
+## [1.6.4]
+### Added
+- Added "Switch Cardinal to Coordinates" option to compass settings that swaps N/S/W/E to +Z/-Z/+X/-X
+
+### Changed
+- None
+
+### Fixed
+- None
+
 ## [1.6.3] - 2025-12-25
 ### Added
 - Compass now automatically hides when viewing Flashback replays

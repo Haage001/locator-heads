@@ -3,7 +3,7 @@ package haage.mixin;
 import haage.LocatorHeads;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import org.spongepowered.asm.mixin.Final;
@@ -35,7 +35,7 @@ public abstract class ExperienceBarRendererMixin {
      @param ci Callback info for the injection
      */
     @Inject(method = "*", at = @At("RETURN"))
-    private void locatorHeads$addLocatorOverlayToExperienceBar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void locatorHeads$addLocatorOverlayToExperienceBar(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         // Only proceed if config is loaded and feature is enabled
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.alwaysShowXP) {
             return;
@@ -43,6 +43,7 @@ public abstract class ExperienceBarRendererMixin {
         
         // Render the locator bar on top of the experience bar
         LocatorBarRenderer renderer = new LocatorBarRenderer(this.minecraft);
-        renderer.render(guiGraphics, deltaTracker);
+        renderer.extractBackground(guiGraphics, deltaTracker);
+        renderer.extractRenderState(guiGraphics, deltaTracker);
     }
 }

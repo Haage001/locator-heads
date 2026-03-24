@@ -4,7 +4,7 @@ import haage.LocatorHeads;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.Final;
@@ -37,8 +37,8 @@ public class GuiMixin {
      * Renders the compass overlay on the locator bar position.
      * Injects into the main render method to draw once per frame.
      */
-    @Inject(method = "render", at = @At("RETURN"))
-    private void locatorHeads$renderCompass(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractRenderState", at = @At("RETURN"))
+    private void locatorHeads$renderCompass(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod || !LocatorHeads.CONFIG.showCompass) {
             return;
         }
@@ -68,14 +68,21 @@ public class GuiMixin {
         int centerX = screenWidth / 2;
         int compassY = screenHeight - 31; // Position on top of the XP bar itself
         
-        // Draw cardinal directions
-        locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "S", 0);
-        locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "W", 90);
-        locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "N", 180);
-        locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "E", 270);
+        // Draw cardinal directions or coordinate notation based on config
+        if (LocatorHeads.CONFIG.useCoordinatesNotation) {
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "+Z", 0);
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "-X", 90);
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "-Z", 180);
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "+X", 270);
+        } else {
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "S", 0);
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "W", 90);
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "N", 180);
+            locatorHeads$drawCardinalDirection(guiGraphics, centerX, compassY, yaw, "E", 270);
+        }
     }
     
-    private void locatorHeads$drawCardinalDirection(GuiGraphics guiGraphics, int centerX, int compassY, float playerYaw, String direction, float directionAngle) {
+    private void locatorHeads$drawCardinalDirection(GuiGraphicsExtractor guiGraphics, int centerX, int compassY, float playerYaw, String direction, float directionAngle) {
         // Normalize angles
         float normalizedYaw = ((playerYaw % 360) + 360) % 360;
         float angleDiff = directionAngle - normalizedYaw;
@@ -113,13 +120,13 @@ public class GuiMixin {
         // Draw black outline if enabled (fades with the letter)
         if (LocatorHeads.CONFIG.compassShadow) {
             int shadowColor = (alpha << 24); // Black with same alpha as letter
-            guiGraphics.drawString(this.minecraft.font, direction, textX - 1, compassY, shadowColor, false);
-            guiGraphics.drawString(this.minecraft.font, direction, textX + 1, compassY, shadowColor, false);
-            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY - 1, shadowColor, false);
-            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY + 1, shadowColor, false);
+            guiGraphics.text(this.minecraft.font, direction, textX - 1, compassY, shadowColor, false);
+            guiGraphics.text(this.minecraft.font, direction, textX + 1, compassY, shadowColor, false);
+            guiGraphics.text(this.minecraft.font, direction, textX, compassY - 1, shadowColor, false);
+            guiGraphics.text(this.minecraft.font, direction, textX, compassY + 1, shadowColor, false);
         }
         // Draw colored letter on top
-        guiGraphics.drawString(this.minecraft.font, direction, textX, compassY, color, false);
+        guiGraphics.text(this.minecraft.font, direction, textX, compassY, color, false);
     }
     
     /**

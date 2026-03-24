@@ -17,6 +17,8 @@
   "text.autoconfig.locator-heads.option.compassColor.@Tooltip": "Custom colour for the compass direction letters (supports hex)",
   "text.autoconfig.locator-heads.option.compassShadow": "Compass Shadow",
   "text.autoconfig.locator-heads.option.compassShadow.@Tooltip": "Show black outline around compass letters for better visibility",
+  "text.autoconfig.locator-heads.option.useCoordinatesNotation": "Switch Cardinal to Coordinates",
+  "text.autoconfig.locator-heads.option.useCoordinatesNotation.@Tooltip": "Swaps N/S/W/E to +Z/-Z/+X/-X",
   "text.autoconfig.locator-heads.option.enableTeamBorder": "Enable Team Border",
   "text.autoconfig.locator-heads.option.enableTeamBorder.@Tooltip": "Show colored borders around player heads based on their team or a static color",
   "text.autoconfig.locator-heads.option.teamBorderThickness": "Team Border Thickness",

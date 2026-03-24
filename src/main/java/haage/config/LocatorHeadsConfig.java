@@ -10,6 +10,7 @@ public class LocatorHeadsConfig {
     public boolean showCompass = false;
     public int compassColor = 0xFFFFFF;
     public boolean compassShadow = true;
+    public boolean useCoordinatesNotation = false;
     public boolean enableTeamBorder = false;
     public BorderThickness teamBorderThickness = BorderThickness.NORMAL;
     public BorderStyle borderStyle = BorderStyle.TEAM_COLOR;
