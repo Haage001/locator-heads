@@ -37,13 +37,12 @@ public abstract class ExperienceBarRendererMixin {
     @Inject(method = "*", at = @At("RETURN"))
     private void locatorHeads$addLocatorOverlayToExperienceBar(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         // Only proceed if config is loaded and feature is enabled
-        if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.alwaysShowXP) {
+        if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.alwaysShowXP || !LocatorHeads.CONFIG.enableMod) {
             return;
         }
         
-        // Render the locator bar on top of the experience bar
+        // Render only locator markers. Drawing locator background here would hide the XP bar.
         LocatorBarRenderer renderer = new LocatorBarRenderer(this.minecraft);
-        renderer.extractBackground(guiGraphics, deltaTracker);
         renderer.extractRenderState(guiGraphics, deltaTracker);
     }
 }

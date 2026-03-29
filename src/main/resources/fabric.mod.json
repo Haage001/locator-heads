@@ -22,6 +22,9 @@
 		"main": [
 			"haage.LocatorHeads"
 		],
+		"modmenu": [
+			"haage.config.LocatorHeadsModMenuIntegration"
+		],
 		"fabric-datagen": [
 			"haage.LocatorHeadsDataGenerator"
 		]
@@ -33,7 +36,10 @@
 		"fabricloader": ">=0.18.4",
 		"minecraft": ">=26.1",
 		"java": ">=25",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"cloth-config2": ">=26.1.154"
 	},
-	"suggests": {}
+	"suggests": {
+		"modmenu": ">=18.0.0-alpha.8"
+	}
 }

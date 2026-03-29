@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.1.0]
+### Added
+- Added Cloth Config powered settings screen.
+- Added Mod Menu integration to open config in-game.
+
+### Changed
+- Bumped mod version to 2.1.0.
+
+### Fixed
+- None
+
 ## [2.0.0]
 ### Added
 - None

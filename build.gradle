@@ -44,6 +44,14 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+	// Config screen support.
+	compileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+
+	// Optional Mod Menu integration (entrypoint is only used when Mod Menu is present).
+	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
 }
 
 processResources {
