@@ -56,6 +56,7 @@
   "option.locator-heads.always_show_xp": "Always Show XP Bar",
   "option.locator-heads.head_size": "Head Size",
   "option.locator-heads.show_player_names": "Show Player Names",
+  "option.locator-heads.max_player_marker_distance": "Player marker distence",
   "option.locator-heads.show_compass": "Show Compass",
   "option.locator-heads.compass_color": "Compass Colour",
   "option.locator-heads.compass_shadow": "Compass Shadow",

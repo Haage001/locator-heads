@@ -50,6 +50,10 @@ public class LocatorHeadsModMenuIntegration implements ModMenuApi {
                     .setEnumNameProvider(mode -> Component.translatable("enum.locator-heads.name_display_mode." + mode.name().toLowerCase()))
                     .setSaveConsumer(value -> current.showPlayerNames = value)
                     .build());
+            general.addEntry(entries.startStrField(Component.translatable("option.locator-heads.max_player_marker_distance"), current.getMaxPlayerMarkerDistanceText())
+                    .setDefaultValue("")
+                    .setSaveConsumer(current::setMaxPlayerMarkerDistanceFromText)
+                    .build());
 
             ConfigCategory compass = builder.getOrCreateCategory(Component.translatable("category.locator-heads.compass"));
             compass.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.show_compass"), current.showCompass)

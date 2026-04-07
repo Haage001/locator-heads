@@ -17,9 +17,36 @@ public class LocatorHeadsConfig {
     public int staticBorderColor = 0xFFFFFF;
     public int headSizeMultiplier = 5; // 5 = 1.0x, 1 = 0.5x, 9 = 1.5x
     public NameDisplayMode showPlayerNames = NameDisplayMode.OFF;
+    public Integer maxPlayerMarkerDistance = null; // null/empty = infinite distance
     public PlayerFilterMode playerFilterMode = PlayerFilterMode.ALL;
     public String includedPlayers = "";
     public String excludedPlayers = "";
+
+    public Integer getMaxPlayerMarkerDistance() {
+        if (maxPlayerMarkerDistance == null || maxPlayerMarkerDistance <= 0) {
+            return null;
+        }
+        return maxPlayerMarkerDistance;
+    }
+
+    public String getMaxPlayerMarkerDistanceText() {
+        Integer value = getMaxPlayerMarkerDistance();
+        return value == null ? "" : value.toString();
+    }
+
+    public void setMaxPlayerMarkerDistanceFromText(String text) {
+        if (text == null || text.trim().isEmpty()) {
+            maxPlayerMarkerDistance = null;
+            return;
+        }
+
+        try {
+            int parsed = Integer.parseInt(text.trim());
+            maxPlayerMarkerDistance = parsed > 0 ? parsed : null;
+        } catch (NumberFormatException ignored) {
+            // Keep existing value if the input is invalid.
+        }
+    }
 
     // Helper method to get the actual multiplier value
     public double getHeadSizeMultiplier() {

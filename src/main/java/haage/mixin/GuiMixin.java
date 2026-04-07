@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Gui.class)
 public class GuiMixin {
+    private static final float COMPASS_TOTAL_FOV_DEGREES = 120.0f;
     
     @Shadow
     @Final
@@ -91,24 +92,20 @@ public class GuiMixin {
         while (angleDiff > 180) angleDiff -= 360;
         while (angleDiff < -180) angleDiff += 360;
         
-        // Only show directions within 100 degrees of view (increased from 90 for better visibility)
-        if (Math.abs(angleDiff) > 100) {
+        float halfFov = COMPASS_TOTAL_FOV_DEGREES / 2.0f;
+
+        // 120 total FOV means +/-60 from center.
+        if (Math.abs(angleDiff) > halfFov) {
             return;
         }
-        
-        // Calculate X position based on angle difference
-        // Reduced multiplier to keep within XP bar bounds (182 pixels / 2 = 91 max offset)
-        int offset = (int)(angleDiff * 0.9f); // Reduced from 2.0f to keep within bounds
+
+        // Map angle directly into XP bar width (182 pixels wide, centered).
+        int xpBarHalfWidth = 91; // 182 / 2
+        int offset = (int)((angleDiff / halfFov) * xpBarHalfWidth);
         int x = centerX + offset;
         
-        // Clamp to XP bar width (182 pixels wide, centered)
-        int xpBarHalfWidth = 91; // 182 / 2
-        int minX = centerX - xpBarHalfWidth;
-        int maxX = centerX + xpBarHalfWidth;
-        x = Math.max(minX, Math.min(maxX, x));
-        
         // Calculate opacity based on distance from center (fade at edges)
-        float centerDistance = Math.abs(angleDiff) / 90.0f;
+        float centerDistance = Math.abs(angleDiff) / halfFov;
         int alpha = (int)((1.0f - centerDistance * 0.5f) * 255);
         
         // Get compass color from config (includes alpha from the color picker)

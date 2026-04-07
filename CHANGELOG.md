@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.2.0]
+### Added
+- Added "Player marker distence" option under General (empty = infinite distance).
+
+### Changed
+- Updated compass marker field of vision to match head marker visibility.
+- Bumped mod version to 2.2.0.
+
+### Fixed
+- Compass cardinal markers now use the same visibility window behavior as heads.
+
 ## [2.1.0]
 ### Added
 - Added Cloth Config powered settings screen.
