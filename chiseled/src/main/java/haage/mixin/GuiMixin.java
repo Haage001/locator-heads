@@ -4,7 +4,10 @@ import haage.LocatorHeads;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+//? if >=26.1
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+//? if <=1.21.11
+/*import net.minecraft.client.gui.GuiGraphics;*/
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.Final;
@@ -27,7 +30,10 @@ public class GuiMixin {
      * Inject into the method that determines if the experience bar should be prioritized.
      * When alwaysShowXP is enabled, force it to return true so the XP bar is always shown.
      */
+    //? if >=26.1
     @Inject(method = "*()Z", at = @At("RETURN"), cancellable = true)
+    //? if <=1.21.11
+    /*@Inject(method = "willPrioritizeExperienceInfo", at = @At("RETURN"), cancellable = true)*/
     private void locatorHeads$alwaysShowExperienceBar(CallbackInfoReturnable<Boolean> cir) {
         if (LocatorHeads.CONFIG != null && LocatorHeads.CONFIG.alwaysShowXP) {
             cir.setReturnValue(true);
@@ -38,8 +44,11 @@ public class GuiMixin {
      * Renders the compass overlay on the locator bar position.
      * Injects into the main render method to draw once per frame.
      */
+    //? if >=26.1
     @Inject(method = "extractRenderState", at = @At("RETURN"))
-    private void locatorHeads$renderCompass(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    //? if <=1.21.11
+    /*@Inject(method = "render", at = @At("RETURN"))*/
+    private void locatorHeads$renderCompass(/*? if >=26.1 {*/ GuiGraphicsExtractor /*?} else {*/ /*GuiGraphics*/ /*?}*/ guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod || !LocatorHeads.CONFIG.showCompass) {
             return;
         }
@@ -83,7 +92,7 @@ public class GuiMixin {
         }
     }
     
-    private void locatorHeads$drawCardinalDirection(GuiGraphicsExtractor guiGraphics, int centerX, int compassY, float playerYaw, String direction, float directionAngle) {
+    private void locatorHeads$drawCardinalDirection(/*? if >=26.1 {*/ GuiGraphicsExtractor /*?} else {*/ /*GuiGraphics*/ /*?}*/ guiGraphics, int centerX, int compassY, float playerYaw, String direction, float directionAngle) {
         // Normalize angles
         float normalizedYaw = ((playerYaw % 360) + 360) % 360;
         float angleDiff = directionAngle - normalizedYaw;
@@ -115,6 +124,7 @@ public class GuiMixin {
         // Draw the direction letter with optional black outline
         int textX = x - 2;
         // Draw black outline if enabled (fades with the letter)
+//? if >=26.1 {
         if (LocatorHeads.CONFIG.compassShadow) {
             int shadowColor = (alpha << 24); // Black with same alpha as letter
             guiGraphics.text(this.minecraft.font, direction, textX - 1, compassY, shadowColor, false);
@@ -124,6 +134,17 @@ public class GuiMixin {
         }
         // Draw colored letter on top
         guiGraphics.text(this.minecraft.font, direction, textX, compassY, color, false);
+//?} else {
+/*      if (LocatorHeads.CONFIG.compassShadow) {
+            int shadowColor = (alpha << 24);
+            guiGraphics.drawString(this.minecraft.font, direction, textX - 1, compassY, shadowColor, false);
+            guiGraphics.drawString(this.minecraft.font, direction, textX + 1, compassY, shadowColor, false);
+            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY - 1, shadowColor, false);
+            guiGraphics.drawString(this.minecraft.font, direction, textX, compassY + 1, shadowColor, false);
+        }
+        guiGraphics.drawString(this.minecraft.font, direction, textX, compassY, color, false);
+*/
+//?}
     }
     
     /**

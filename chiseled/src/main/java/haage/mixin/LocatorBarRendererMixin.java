@@ -3,10 +3,16 @@ package haage.mixin;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import haage.LocatorHeads;
 import net.minecraft.client.Minecraft;
+//? if >=26.1 {
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
+//?} else {
+/*import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+*/
+//?}
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.client.resources.WaypointStyle;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -26,7 +32,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LocatorBarRenderer.class)
 public class LocatorBarRendererMixin {
     @Shadow @Final private Minecraft minecraft;
+    //? if >=26.1
     @Unique private Identifier locatorHeads$skinOverride;
+    //? if <=1.21.11
+    /*@Unique private ResourceLocation locatorHeads$skinOverride;*/
     @Unique private TrackedWaypoint locatorHeads$currentWaypoint;
     @Unique private int locatorHeads$teamColor = 0xFFFFFF; // Default white
     @Unique private String locatorHeads$playerName = null;
@@ -35,8 +44,11 @@ public class LocatorBarRendererMixin {
     @Unique private static final java.util.Map<String, Boolean> locatorHeads$nameAnimationDirection = new java.util.HashMap<>(); // true = fade in
     @Unique private static final int locatorHeads$ANIMATION_DURATION_MS = 150; // ms
 
+    //? if >=26.1
     @Inject(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", shift = At.Shift.BEFORE))
-    private void locatorHeads$captureWaypointForSkinRender(Entity entity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphicsExtractor guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci) {
+    //? if <=1.21.11
+    /*@Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIIII)V", shift = At.Shift.BEFORE))*/
+    private void locatorHeads$captureWaypointForSkinRender(Entity entity, Level level, PartialTickSupplier partialTickSupplier, /*? if >=26.1 {*/ GuiGraphicsExtractor /*?} else {*/ /*GuiGraphics*/ /*?}*/ guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci) {
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod) {
             this.locatorHeads$shouldHideWaypoint = false;
             return;
@@ -80,8 +92,13 @@ public class LocatorBarRendererMixin {
         }
     }
 
+    //? if >=26.1
     @Redirect(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V"))
     private void locatorHeads$renderPlayerSkinInsteadOfIcon(GuiGraphicsExtractor guiGraphics, RenderPipeline pipeline, Identifier originalIcon, int x, int y, int w, int h, int d) {
+    //? if <=1.21.11 {
+    /*@Redirect(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIIII)V"))
+    private void locatorHeads$renderPlayerSkinInsteadOfIcon(GuiGraphics guiGraphics, RenderPipeline pipeline, ResourceLocation originalIcon, int x, int y, int w, int h, int d) {*/
+    //?}
         if (this.locatorHeads$shouldHideWaypoint) return;
         if (this.locatorHeads$skinOverride == null || LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod) {
             guiGraphics.blitSprite(pipeline, originalIcon, x, y, w, h, d);
@@ -92,7 +109,7 @@ public class LocatorBarRendererMixin {
     }
 
     @Unique
-    private void locatorHeads$renderPlayerHead(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height) {
+    private void locatorHeads$renderPlayerHead(/*? if >=26.1 {*/ GuiGraphicsExtractor /*?} else {*/ /*GuiGraphics*/ /*?}*/ guiGraphics, int x, int y, int width, int height) {
         if (LocatorHeads.CONFIG == null || LocatorHeads.CONFIG.teamBorderThickness == null) return;
 
         float distance = Mth.sqrt((float)this.locatorHeads$currentWaypoint.distanceSquared(this.minecraft.getCameraEntity()));
@@ -196,7 +213,10 @@ public class LocatorBarRendererMixin {
             }
 
             if (alpha > 0) {
+                //? if >=26.1
                 guiGraphics.text(this.minecraft.font, this.locatorHeads$playerName, textX, textY, textColor, true);
+                //? if <=1.21.11
+                /*guiGraphics.drawString(this.minecraft.font, this.locatorHeads$playerName, textX, textY, textColor, true);*/
             }
             if (!dir && animProg >= 1f) { // fade-out finished
                 locatorHeads$nameAnimationStartTimes.remove(this.locatorHeads$playerName);
