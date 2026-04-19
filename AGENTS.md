@@ -1,20 +1,43 @@
 # Agent Directives: Locator Heads
 
-Welcome to the Locator Heads repository! This document outlines the constraints, patterns, and workflows needed when utilizing an AI code assistant to contribute to this project.
+Welcome to the Locator Heads repository! This document outlines constraints and patterns for AI code assistants working on this project.
 
-## Source of Truth Architecture
+## Architecture
 
-- **Single Universal Branch:** The central branch (`feature/version-releases` running into `main`) compiles and supports ALL active Minecraft targets concurrently (1.21.10 - 26.1). Do **not** create separate repository branches for different Minecraft versions.
-- **Root Directory Logic:** The codebase utilizes **Stonecutter 0.9**. The `chiseled/` directory contains all source files and the central `build.gradle.kts`. When `./gradlew build` is run, Stonecutter replicates this logic out to the different variants.
-- **Conditional Syntax (Stitcher):** Handle all API/Minecraft shifts within the same file using Stonecutter comment macros (e.g., `//? if >=26.1` and `//? if <=1.21.11`). Do NOT use reflection or separate dynamic classloading for standard Minecraft mappings.
+- **Single Branch, All Versions:** The codebase compiles and supports 4 Minecraft targets concurrently: 1.21.7, 1.21.9, 1.21.11, and 26.1. Do **not** create separate branches for different versions.
+- **Source Location:** All code lives in `src/`. The `versions/` directories contain only `gradle.properties` for per-version dependency pinning.
+- **Stonecutter 0.9.1** manages multi-version compilation. API differences are handled with `//? if` comment macros at compile-time.
 
-## Modifying Dependencies
+## Code Rules
 
-- **Strict Interpolation:** NEVER hardcode `fabric-api` or `fabric-loader` string versions in `chiseled/build.gradle.kts`.
-- **Property Overrides:** Locate the specific target in the `versions/` directory (e.g. `versions/1.21.11/gradle.properties`). You must specify the `fabric_api_version` and `fabric_loader_version` required for that target directly inside those property variants. Stonecutter dynamically interpolates these variables.
+- **Stitcher Syntax Required:** Handle all API/Minecraft shifts using `//? if >=26.1` and `//? if <=1.21.11` comment macros. Do NOT use reflection or `Class.forName()` to check versions at runtime.
+- **No Hardcoded Dependencies:** Never hardcode `fabric-api` or `fabric-loader` versions in `build.gradle.kts`. They come from `versions/*/gradle.properties` via Stonecutter property injection.
+- **Use `sc.current` API:** In `build.gradle.kts`, use `sc.current.version` for the current target version string and `sc.current.parsed` for version comparisons. Do not read `STONECUTTER_ACTIVE` from the environment.
 
-## Known Compilation Gotchas
+## Java Toolchains
 
-- **Java Toolchains:** Because experimental snapshots (26.1+) demand Java 25 while legacy demands Java 21, `chiseled/build.gradle.kts` utilizes `toolchain.languageVersion.set(JavaLanguageVersion.of(25))`.
-- **Foojay Plugin Error (`IBM_SEMERU`):** If Gradle auto-provisioning errors out downloading Java 25 stating `Class org.gradle.jvm.toolchain.JvmVendorSpec does not have member field '... IBM_SEMERU'`, the current version of the Foojay plugin fails against Gradle 9 constraints. In these scenarios, you may temporarily downgrade the code requirement to Java 21 just to parse the builds if native host versions do not align.
-- **RemapJar Resolving:** When using `.kts` referencing `tasks.remapJar`, use a robust lookup like `tasks.findByName("remapJar")?.let { ... }` in `afterEvaluate` since Stonecutter config passes may not universally expose it.
+- **26.1+** requires Java 25
+- **1.21.x** requires Java 21
+- This is handled via `//? if` macros in `build.gradle.kts` for both `toolchain.languageVersion` and `options.release`
+
+## Known Gotchas
+
+- **Foojay Plugin Error (`IBM_SEMERU`):** If Gradle errors downloading Java 25, the Foojay plugin may not support it on your system. Temporarily use Java 21 if needed.
+- **RemapJar:** Use `tasks.findByName("remapJar")?.let { ... }` in `afterEvaluate` since Stonecutter config passes may not always expose it.
+
+## Version Coverage
+
+| Target | Hotfixes Covered | Key Changes |
+|---|---|---|
+| 1.21.7 | 1.21.8 | Rendering data extraction; block entity serialization |
+| 1.21.9 | 1.21.10 | Render states; key binding categories |
+| 1.21.11 | — | Registry gamerules; ResourceLocation→Identifier |
+| 26.1 | 26.1.1, 26.1.2 | Java 25; `text()` API; package restructure |
+
+A `versions/26.2/` staging directory exists for the upcoming snapshot but is **not** in the active build list.
+
+## Build & Test
+
+```bash
+./gradlew build    # Compiles all 4 version jars
+```

@@ -1,48 +1,53 @@
 # Contributing to Locator Heads
 
-Thank you for your interest in contributing! This project uses a **Unified Multi-Version** architecture powered by [Stonecutter](https://stonecutter.kikugie.dev/). This means we do not maintain separate Git branches for different Minecraft versions (e.g., `1.21.10`, `1.21.11`, `26.1`). Instead, all contributions must happen on the main branch within a unified codebase.
-
-This guide outlines exactly how to work with the codebase across any IDE (VS Code, Eclipse, IntelliJ) and provides explicit instructions for LLMs and AI Code Assistants.
+Thank you for your interest in contributing! This project uses a **Unified Multi-Version** architecture powered by [Stonecutter](https://stonecutter.kikugie.dev/). All Minecraft versions compile from the **same source files** — we do NOT maintain separate Git branches for different versions.
 
 ---
 
-## 1. Environment Setup (Any IDE)
+## 1. Supported Versions
 
-When you first clone the repository, **do not attempt to build the root package directly**.
+| Build Target | Covers | Notable API Changes |
+|---|---|---|
+| **1.21.7** | 1.21.7, 1.21.8 | Rendering extracts data before drawing; block entity serialization changes |
+| **1.21.9** | 1.21.9, 1.21.10 | Rendering reworked to use render states; key binding category changes |
+| **1.21.11** | 1.21.11 | Gamerules use registries; `ResourceLocation` → `Identifier`; RenderTypes relocated |
+| **26.1** | 26.1, 26.1.1, 26.1.2 | Java 25; new `guiGraphics.text()` API; major package restructure |
 
-You must trigger the Stonecutter multi-version generator to initialize the workspace:
+A `versions/26.2/` staging directory exists for the upcoming snapshot, but is **not** built until Fabric support is published.
 
-```bash
-# Windows
-.\gradlew.bat chiseledSetup
+## 2. Environment Setup
 
-# Mac / Linux
-./gradlew chiseledSetup
-```
-
-This extracts the codebase into targeted Minecraft version profiles.
-
-## 2. Switching Active Versions
-
-If you want your IDE indexer (IntelliSense/LSP) to resolve the Java code against a specific version (for example, mapping 1.21.10 Minecraft APIs instead of 26.1 APIs), use the Gradle `chiseledSetActive` task:
+Clone the repository and run Gradle sync. Stonecutter automatically creates subprojects for each version target:
 
 ```bash
-.\gradlew.bat chiseledSetActive -Pstonecutter.active="1.21.10"
+# Build all 4 version jars
+.\gradlew.bat build        # Windows
+./gradlew build            # Mac / Linux
 ```
 
-_Note: If you use IntelliJ IDEA, you can optionally install the Stonecutter Plugin to get a visual dropdown menu, but the CLI command above universally works in VS Code, Cursor, and vim!_
+The project root `src/` directory is where all source code lives. **Do not** edit files inside `versions/*/` — those directories only contain `gradle.properties` for per-version dependency pinning.
 
-## 3. How to Write Code ( The `chiseled` Directory )
+## 3. Switching Active Versions
 
-All of your actual code changes must happen inside the `chiseled/src/` directory. **Do not** modify code inside any of the generated version directories (e.g., `versions/1.21.10/src`); those are ephemeral output folders and your changes will be overwritten!
+Your IDE indexes code against one Minecraft version at a time. To switch which version is "active" (controls IntelliSense/code highlighting):
+
+```bash
+.\gradlew.bat "Set active version to 1.21.9"
+```
+
+Replace `1.21.9` with any supported version. In IntelliJ IDEA, you can also install the [Stonecutter Plugin](https://plugins.jetbrains.com/plugin/25044-stonecutter-dev) for a visual dropdown.
+
+## 4. How to Write Code
+
+### Where to edit
+
+All code lives in `src/main/java/` and `src/main/resources/`. This single codebase compiles for every target version.
 
 ### Handling Version Differences
 
-Because this single codebase compiles for multiple Minecraft versions, APIs inevitably shift. We handle these changes using **Stitcher Block Comments** (`//?`).
+When APIs change between Minecraft versions, use **Stonecutter comment macros** (`//?`). Never use reflection or runtime version checks.
 
-**Never use Java reflection or pseudo-version variables to handle cross-version rendering.** Instead, write the explicit code for each version alongside each other, separating them with `//?` conditions. The compiler will strip out the irrelevant code during the build process.
-
-**Example of an API change:**
+**Example — a method renamed in 26.1:**
 
 ```java
 public void drawText(...) {
@@ -53,61 +58,52 @@ public void drawText(...) {
 }
 ```
 
-_Notice how the code for the inactive versions is commented out using standard block `/_ ... _/` syntax. Stonecutter will automatically uncomment the correct block during compilation based on the target version._
+The inactive branch is commented out with `/* */`. Stonecutter automatically uncomments the correct code during compilation.
 
-```kotlin
-// In build.gradle.kts:
-dependencies {
-    //? if >=26.1
-    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT"
-    //? if <=1.21.11
-    /*id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT"*/
-}
-```
+**How it works:**
+- `//? if >=26.1` — the **next line** is included only when building for 26.1+
+- `//? if <=1.21.11` — the **next line** (which is a block comment) is uncommented for legacy builds
+- `//? if >=26.1 { ... //?}` — a **multi-line block** included only for 26.1+
 
 ### Handling Resource Files (JSON)
 
-Standard JSON does not support comments, which makes using `//?` macros problematic as it breaks IDE indexing and syntax validation. We handle version shifts in resource files (like `fabric.mod.json`) using **Property Injection**.
+JSON doesn't support comments, so we use **property injection** via Gradle:
 
-1. **Variables in JSON**: Use `${variable_name}` placeholders in the JSON source.
-2. **Logic in Gradle**: Define the logic in `chiseled/build.gradle.kts` within the `tasks.processResources` block to calculate the correct string based on the active version.
+1. Use `${variable_name}` placeholders in `fabric.mod.json`
+2. Define the logic in `build.gradle.kts` inside `tasks.processResources`
 
-**Example:**
-```json
-"depends": {
-    "minecraft": "${minecraft_dependency}"
-}
+## 5. Managing Version-Specific Dependencies
+
+Each version target has its own `versions/<version>/gradle.properties` file with the exact dependency versions:
+
 ```
-```kotlin
-// In build.gradle.kts
-tasks.processResources {
-    val mcDep = if (targetVersion.startsWith("26")) ">=26.1" else ">=1.21"
-    filesMatching("fabric.mod.json") {
-        expand(mapOf("minecraft_dependency" to mcDep))
-    }
-}
+versions/1.21.7/gradle.properties  → fabric_api_version=0.129.0+1.21.7
+versions/1.21.9/gradle.properties  → fabric_api_version=0.134.1+1.21.9
+versions/1.21.11/gradle.properties → fabric_api_version=0.141.3+1.21.11
+versions/26.1/gradle.properties    → fabric_api_version=0.144.4+26.1
 ```
 
-For more complex structure changes that cannot be handled by simple variables, rename the file to `fabric.mod.json.template` and use Gradle to rename it back to `fabric.mod.json` during the build.
+In `build.gradle.kts`, these are referenced with `property("fabric_api_version")`. Stonecutter injects the correct values per build target.
 
-## 4. Managing Version-Specific Dependencies
-Because the actual version string of the Fabric API artifact changes for each of these Minecraft updates, you must manage these changing versions using Gradle properties.
+## 6. Key Files
 
-In `chiseled/build.gradle.kts`, you define the dependency dynamically by referencing a project property:
-```kotlin
-implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_api_version")}")
-```
-
-Inside each of Stonecutter's version-specific directories (e.g., `versions/1.21.11/` and `versions/26.1/`), you maintain a separate `gradle.properties` file that targets that compilation step.
-Inside that file, define the exact `fabric_api_version` string required for that particular Minecraft version (for example, `0.139.4+1.21.11` for the 1.21.11 environment). Stonecutter automatically injects that property context into the subproject build!
+| File | Purpose |
+|---|---|
+| `src/` | All source code (Java + resources) |
+| `build.gradle.kts` | Shared build script — runs once per version target |
+| `settings.gradle.kts` | Stonecutter plugin setup + version list |
+| `stonecutter.gradle.kts` | Auto-generated controller (sets active version) |
+| `gradle.properties` | Mod metadata + `stonecutter_versions` list |
+| `versions/*/gradle.properties` | Per-version dependencies |
 
 ---
 
 ## 🤖 Instructions for AI / LLM Code Assistants
 
-If you are an agent reading this file to assist the user, you must strictly adhere to the following rules when altering this repository:
+If you are an agent reading this file, strictly follow these rules:
 
-1. **Rule of One Branch:** Do not suggest checking out legacy tags or branches to backport logic. `1.21.10` and `26.1` compile from the exact same file in `chiseled/`.
-2. **Rule of Stitcher Syntax:** When translating logic from legacy mappings (Yarn) to Mojmap, or handling rendering shifts (like `GuiGraphics`), you must encapsulate the branching logic in standard `//? if` Stonecutter preprocessor syntax.
-3. **No Dynamic Classloading:** Avoid injecting `Class.forName()` or `FabricLoader.getInstance().isModLoaded()` specifically to check the Minecraft version state. Handle Minecraft version fragmentation explicitly at compile-time using Stonecutter.
-4. **Execution Bound**: Run tests using `./gradlew build`—Stonecutter handles executing Loom sequentially across the bounds silently.
+1. **Single Branch:** All versions compile from the same `src/` directory. Never suggest separate branches.
+2. **Stitcher Syntax:** Handle API differences with `//? if` macros. Never use `Class.forName()` or runtime version checks.
+3. **No Hardcoded Versions:** Dependencies are in `versions/*/gradle.properties`, not in `build.gradle.kts`.
+4. **Build Verification:** Run `./gradlew build` — Stonecutter handles all 4 targets sequentially.
+5. **Use `sc.current`:** In `build.gradle.kts`, use `sc.current.version` (String) and `sc.current.parsed` (comparison) instead of environment variables.

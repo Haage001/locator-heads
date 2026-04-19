@@ -23,8 +23,12 @@ jobs:
         run: chmod +x ./gradlew
       - name: build all versions (Stonecutter)
         run: |
-          VERSIONS=("1.21.7" "1.21.10" "1.21.11" "26.1" "26.2")
-          for v in "${VERSIONS[@]}"; do
+          # Read comma-separated versions from gradle.properties and convert to space-separated array
+          RAW_VERSIONS=$(grep "^stonecutter_versions=" gradle.properties | cut -d'=' -f2)
+          IFS=',' read -ra VERSIONS_ARRAY <<< "$RAW_VERSIONS"
+          
+          for v_raw in "${VERSIONS_ARRAY[@]}"; do
+            v=$(echo "$v_raw" | xargs) # trim whitespace
             echo "Building $v natively..."
             export STONECUTTER_ACTIVE=$v
             ./gradlew stonecutterSwitchTo$v

@@ -7,16 +7,20 @@ pluginManagement {
 }
 
 plugins {
-	id("dev.kikugie.stonecutter") version "0.9"
+    id("dev.kikugie.stonecutter") version "0.9.1"
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
+// Read supported versions from root gradle.properties (single source of truth)
+val stonecutterVersions = (providers.gradleProperty("stonecutter_versions").getOrNull() ?: "26.1")
+    .split(",")
+    .map { it.trim() }
+
 stonecutter {
     create(rootProject) {
-        versions("1.21.7", "1.21.10", "1.21.11", "26.1", "26.2")
-        vcsVersion = "26.1"
+        versions(stonecutterVersions)
+        vcsVersion = "26.1"   // Git commits are normalized against 26.1
     }
 }
 
 rootProject.name = "locator-heads"
-include("chiseled")
