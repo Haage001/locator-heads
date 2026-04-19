@@ -11,7 +11,7 @@ Welcome to the Locator Heads repository! This document outlines the constraints,
 ## Modifying Dependencies
 
 - **Strict Interpolation:** NEVER hardcode `fabric-api` or `fabric-loader` string versions in `chiseled/build.gradle.kts`.
-- **Property Overrides:** Locate the specific target in the `versions/` directory (e.g. `versions/1.21.11/gradle.properties`). You must specify the `fabric_api_version` and `loader_version` required for that target directly inside those property variants. Stonecutter dynamically interpolates these variables.
+- **Property Overrides:** Locate the specific target in the `versions/` directory (e.g. `versions/1.21.11/gradle.properties`). You must specify the `fabric_api_version` and `fabric_loader_version` required for that target directly inside those property variants. Stonecutter dynamically interpolates these variables.
 
 ## Known Compilation Gotchas
 

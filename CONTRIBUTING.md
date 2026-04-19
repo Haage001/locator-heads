@@ -65,6 +65,31 @@ dependencies {
 }
 ```
 
+### Handling Resource Files (JSON)
+
+Standard JSON does not support comments, which makes using `//?` macros problematic as it breaks IDE indexing and syntax validation. We handle version shifts in resource files (like `fabric.mod.json`) using **Property Injection**.
+
+1. **Variables in JSON**: Use `${variable_name}` placeholders in the JSON source.
+2. **Logic in Gradle**: Define the logic in `chiseled/build.gradle.kts` within the `tasks.processResources` block to calculate the correct string based on the active version.
+
+**Example:**
+```json
+"depends": {
+    "minecraft": "${minecraft_dependency}"
+}
+```
+```kotlin
+// In build.gradle.kts
+tasks.processResources {
+    val mcDep = if (targetVersion.startsWith("26")) ">=26.1" else ">=1.21"
+    filesMatching("fabric.mod.json") {
+        expand(mapOf("minecraft_dependency" to mcDep))
+    }
+}
+```
+
+For more complex structure changes that cannot be handled by simple variables, rename the file to `fabric.mod.json.template` and use Gradle to rename it back to `fabric.mod.json` during the build.
+
 ## 4. Managing Version-Specific Dependencies
 Because the actual version string of the Fabric API artifact changes for each of these Minecraft updates, you must manage these changing versions using Gradle properties.
 
