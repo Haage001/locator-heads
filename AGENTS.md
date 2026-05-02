@@ -14,7 +14,7 @@ Welcome to the Locator Heads repository! This document outlines constraints and 
 - **No Hardcoded Dependencies:** Never hardcode `fabric-api` or `fabric-loader` versions in `build.gradle.kts`. They come from `versions/*/gradle.properties` via Stonecutter property injection.
 - **Use `sc.current` API:** In `build.gradle.kts`, use `sc.current.version` for the current target version string and `sc.current.parsed` for version comparisons. Do not read `STONECUTTER_ACTIVE` from the environment.
 - **Minimize Code Divergence:** Prefer code that works across all versions. Only introduce `//? if` macros where a compile error forces it. Do NOT copy old code patterns just because they shipped — verify what actually works.
-- **Consolidate Repeated Macros:** If the same `//? if` condition would appear at multiple call sites for the same API change, write a `@Unique` helper method that bridges the difference once, then call the helper everywhere. See `LocatorHeadsModMenuIntegration.java` for an example (`translatable()` / `literal()` wrappers).
+- **Consolidate Repeated Macros:** If the same `//? if` condition would appear at multiple call sites for the same API change, write a `@Unique` helper method that bridges the difference once, then call the helper everywhere.
 
 ## Three API Boundaries
 

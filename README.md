@@ -29,7 +29,7 @@ is a client-side Minecraft mod that displays nearby players as heads on your XP 
 <summary><h2>🎭 General Settings</h2></summary>
 
 - Enable/Disable Mod
-  Chose weather or not mod is on or off.
+  Choose whether or not mod is on or off.
 - Render Heads
   Choose if you want heads to be rendered (can be used to only show names)
 - Always show XP bar

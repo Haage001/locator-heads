@@ -15,9 +15,10 @@ public class LocatorHeadsModMenuIntegration implements ModMenuApi {
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
             LocatorHeadsConfig current = LocatorHeads.CONFIG != null ? LocatorHeads.CONFIG : new LocatorHeadsConfig();
+
             ConfigBuilder builder = ConfigBuilder.create()
                     .setParentScreen(parent)
-                    .setTitle(translatable("title.locator-heads.config"));
+                    .setTitle(Component.translatable("title.locator-heads.config"));
 
             builder.setSavingRunnable(() -> {
                 LocatorHeads.CONFIG = current;
@@ -26,100 +27,83 @@ public class LocatorHeadsModMenuIntegration implements ModMenuApi {
 
             ConfigEntryBuilder entries = builder.entryBuilder();
 
-            ConfigCategory general = builder.getOrCreateCategory(translatable("category.locator-heads.general"));
-
-            general.addEntry(entries.startBooleanToggle(translatable("option.locator-heads.enable_mod"), current.enableMod)
+            ConfigCategory general = builder.getOrCreateCategory(Component.translatable("category.locator-heads.general"));
+            general.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.enable_mod"), current.enableMod)
                     .setDefaultValue(true)
                     .setSaveConsumer(value -> current.enableMod = value)
                     .build());
-            
-            general.addEntry(entries.startBooleanToggle(translatable("option.locator-heads.render_heads"), current.renderHeads)
+            general.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.render_heads"), current.renderHeads)
                     .setDefaultValue(true)
                     .setSaveConsumer(value -> current.renderHeads = value)
                     .build());
-            
-            general.addEntry(entries.startBooleanToggle(translatable("option.locator-heads.always_show_xp"), current.alwaysShowXP)
+            general.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.always_show_xp"), current.alwaysShowXP)
                     .setDefaultValue(false)
                     .setSaveConsumer(value -> current.alwaysShowXP = value)
                     .build());
-            
-            general.addEntry(entries.startIntSlider(translatable("option.locator-heads.head_size"), current.headSizeMultiplier, 1, 9)
+            general.addEntry(entries.startIntSlider(Component.translatable("option.locator-heads.head_size"), current.headSizeMultiplier, 1, 9)
                     .setDefaultValue(5)
-                    .setTextGetter(value -> literal(String.format("%.1fx", convertHeadSize(value))))
+                    .setTextGetter(value -> Component.literal(String.format("%.1fx", convertHeadSize(value))))
                     .setSaveConsumer(value -> current.headSizeMultiplier = value)
                     .build());
-            
-            general.addEntry(entries.startEnumSelector(translatable("option.locator-heads.show_player_names"), LocatorHeadsConfig.NameDisplayMode.class, current.showPlayerNames)
+            general.addEntry(entries.startEnumSelector(Component.translatable("option.locator-heads.show_player_names"), LocatorHeadsConfig.NameDisplayMode.class, current.showPlayerNames)
                     .setDefaultValue(LocatorHeadsConfig.NameDisplayMode.OFF)
-                    .setEnumNameProvider(mode -> translatable("enum.locator-heads.name_display_mode." + mode.name().toLowerCase()))
+                    .setEnumNameProvider(mode -> Component.translatable("enum.locator-heads.name_display_mode." + mode.name().toLowerCase()))
                     .setSaveConsumer(value -> current.showPlayerNames = value)
                     .build());
-            
-            general.addEntry(entries.startStrField(translatable("option.locator-heads.max_player_marker_distance"), current.getMaxPlayerMarkerDistanceText())
+            general.addEntry(entries.startStrField(Component.translatable("option.locator-heads.max_player_marker_distance"), current.getMaxPlayerMarkerDistanceText())
                     .setDefaultValue("")
                     .setSaveConsumer(current::setMaxPlayerMarkerDistanceFromText)
                     .build());
 
-            ConfigCategory compass = builder.getOrCreateCategory(translatable("category.locator-heads.compass"));
-            
-            compass.addEntry(entries.startBooleanToggle(translatable("option.locator-heads.show_compass"), current.showCompass)
+            ConfigCategory compass = builder.getOrCreateCategory(Component.translatable("category.locator-heads.compass"));
+            compass.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.show_compass"), current.showCompass)
                     .setDefaultValue(false)
                     .setSaveConsumer(value -> current.showCompass = value)
                     .build());
-
-            compass.addEntry(entries.startColorField(translatable("option.locator-heads.compass_color"), current.compassColor)
+            compass.addEntry(entries.startColorField(Component.translatable("option.locator-heads.compass_color"), current.compassColor)
                     .setDefaultValue(0xFFFFFF)
                     .setSaveConsumer(value -> current.compassColor = value)
                     .build());
-
-            compass.addEntry(entries.startBooleanToggle(translatable("option.locator-heads.compass_shadow"), current.compassShadow)
+            compass.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.compass_shadow"), current.compassShadow)
                     .setDefaultValue(true)
                     .setSaveConsumer(value -> current.compassShadow = value)
                     .build());
-
-            compass.addEntry(entries.startBooleanToggle(translatable("option.locator-heads.coordinates_notation"), current.useCoordinatesNotation)
+            compass.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.coordinates_notation"), current.useCoordinatesNotation)
                     .setDefaultValue(false)
                     .setSaveConsumer(value -> current.useCoordinatesNotation = value)
                     .build());
 
-            ConfigCategory borders = builder.getOrCreateCategory(translatable("category.locator-heads.borders"));
-            
-            borders.addEntry(entries.startBooleanToggle(translatable("option.locator-heads.enable_team_border"), current.enableTeamBorder)
+            ConfigCategory borders = builder.getOrCreateCategory(Component.translatable("category.locator-heads.borders"));
+            borders.addEntry(entries.startBooleanToggle(Component.translatable("option.locator-heads.enable_team_border"), current.enableTeamBorder)
                     .setDefaultValue(false)
                     .setSaveConsumer(value -> current.enableTeamBorder = value)
                     .build());
-
-            borders.addEntry(entries.startEnumSelector(translatable("option.locator-heads.team_border_thickness"), LocatorHeadsConfig.BorderThickness.class, current.teamBorderThickness)
+            borders.addEntry(entries.startEnumSelector(Component.translatable("option.locator-heads.team_border_thickness"), LocatorHeadsConfig.BorderThickness.class, current.teamBorderThickness)
                     .setDefaultValue(LocatorHeadsConfig.BorderThickness.NORMAL)
-                    .setEnumNameProvider(thickness -> translatable("enum.locator-heads.border_thickness." + thickness.name().toLowerCase()))
+                    .setEnumNameProvider(thickness -> Component.translatable("enum.locator-heads.border_thickness." + thickness.name().toLowerCase()))
                     .setSaveConsumer(value -> current.teamBorderThickness = value)
                     .build());
-
-            borders.addEntry(entries.startEnumSelector(translatable("option.locator-heads.border_style"), LocatorHeadsConfig.BorderStyle.class, current.borderStyle)
+            borders.addEntry(entries.startEnumSelector(Component.translatable("option.locator-heads.border_style"), LocatorHeadsConfig.BorderStyle.class, current.borderStyle)
                     .setDefaultValue(LocatorHeadsConfig.BorderStyle.TEAM_COLOR)
-                    .setEnumNameProvider(style -> translatable("enum.locator-heads.border_style." + style.name().toLowerCase()))
+                    .setEnumNameProvider(style -> Component.translatable("enum.locator-heads.border_style." + style.name().toLowerCase()))
                     .setSaveConsumer(value -> current.borderStyle = value)
                     .build());
-
-            borders.addEntry(entries.startColorField(translatable("option.locator-heads.static_border_color"), current.staticBorderColor)
+            borders.addEntry(entries.startColorField(Component.translatable("option.locator-heads.static_border_color"), current.staticBorderColor)
                     .setDefaultValue(0xFFFFFF)
                     .setSaveConsumer(value -> current.staticBorderColor = value)
                     .build());
 
-            ConfigCategory filters = builder.getOrCreateCategory(translatable("category.locator-heads.filters"));
-            
-            filters.addEntry(entries.startEnumSelector(translatable("option.locator-heads.player_filter_mode"), LocatorHeadsConfig.PlayerFilterMode.class, current.playerFilterMode)
+            ConfigCategory filters = builder.getOrCreateCategory(Component.translatable("category.locator-heads.filters"));
+            filters.addEntry(entries.startEnumSelector(Component.translatable("option.locator-heads.player_filter_mode"), LocatorHeadsConfig.PlayerFilterMode.class, current.playerFilterMode)
                     .setDefaultValue(LocatorHeadsConfig.PlayerFilterMode.ALL)
-                    .setEnumNameProvider(mode -> translatable("enum.locator-heads.player_filter_mode." + mode.name().toLowerCase()))
+                    .setEnumNameProvider(mode -> Component.translatable("enum.locator-heads.player_filter_mode." + mode.name().toLowerCase()))
                     .setSaveConsumer(value -> current.playerFilterMode = value)
                     .build());
-
-            filters.addEntry(entries.startStrField(translatable("option.locator-heads.included_players"), current.includedPlayers)
+            filters.addEntry(entries.startStrField(Component.translatable("option.locator-heads.included_players"), current.includedPlayers)
                     .setDefaultValue("")
                     .setSaveConsumer(value -> current.includedPlayers = value)
                     .build());
-
-            filters.addEntry(entries.startStrField(translatable("option.locator-heads.excluded_players"), current.excludedPlayers)
+            filters.addEntry(entries.startStrField(Component.translatable("option.locator-heads.excluded_players"), current.excludedPlayers)
                     .setDefaultValue("")
                     .setSaveConsumer(value -> current.excludedPlayers = value)
                     .build());
@@ -142,7 +126,4 @@ public class LocatorHeadsModMenuIntegration implements ModMenuApi {
             default -> 1.0;
         };
     }
-
-    private static Component translatable(String key) { return Component.translatable(key); }
-    private static Component literal(String text) { return Component.literal(text); }
 }

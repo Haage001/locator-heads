@@ -1,6 +1,6 @@
 // ┌──────────────────────────────────────────────────────────────────────┐
-// │  build.gradle.kts — Unified Build Script                           │
-// │  Uses Stonecutter syntax to branch between 26.1+ and legacy versions │
+// │  build.gradle.kts — Unified Build Script                             │
+// │  Uses Stonecutter syntax to branch between supported versions        │
 // └──────────────────────────────────────────────────────────────────────┘
 
 plugins {

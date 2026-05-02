@@ -1,0 +1,14 @@
+{
+  "text.autoconfig.locator-heads.option.compassColor": "Compass Colour",
+  "text.autoconfig.locator-heads.option.compassColor.@Tooltip": "Custom colour for the compass direction letters (supports hex)",
+  "text.autoconfig.locator-heads.option.enableTeamBorder.@Tooltip": "Show coloured borders around player heads based on their team or a static colour",
+  "text.autoconfig.locator-heads.option.borderStyle.@Tooltip": "Use team colour or a static chosen colour for borders (and name tint)",
+  "text.autoconfig.locator-heads.option.borderStyle.TEAM_COLOR": "Team Colour",
+  "text.autoconfig.locator-heads.option.borderStyle.STATIC_COLOR": "Static Colour",
+  "text.autoconfig.locator-heads.option.staticBorderColor": "Static Border Colour",
+  "text.autoconfig.locator-heads.option.staticBorderColor.@Tooltip": "Custom colour for static border (supports hex)",
+  "option.locator-heads.compass_color": "Compass Colour",
+  "option.locator-heads.static_border_color": "Static Border Colour",
+  "enum.locator-heads.border_style.team_color": "Team Colour",
+  "enum.locator-heads.border_style.static_color": "Static Colour"
+}

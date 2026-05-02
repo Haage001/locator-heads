@@ -22,24 +22,24 @@ The build produces one jar per Minecraft version targeted in `versions/*/build/l
 ## 2. Supported Versions
 
 | Build Target | Covers Minecraft Versions |
-|---|---|
-| **1.21.7** | 1.21.7, 1.21.8 |
-| **1.21.9** | 1.21.9, 1.21.10 |
-| **1.21.11** | 1.21.11 |
-| **26.1** | 26.1, 26.1.1, 26.1.2 |
+| ------------ | ------------------------- |
+| **1.21.7**   | 1.21.7, 1.21.8            |
+| **1.21.9**   | 1.21.9, 1.21.10           |
+| **1.21.11**  | 1.21.11                   |
+| **26.1**     | 26.1, 26.1.1, 26.1.2      |
 
 For detailed API changes at each version boundary, see the [Version Coverage table in AGENTS.md](AGENTS.md#version-coverage).
 
 ## 3. Project Structure
 
-| Path | Purpose |
-|---|---|
-| `src/` | All source code (Java + resources) — the **only** place to edit code |
-| `build.gradle.kts` | Shared build script — runs once per version target |
-| `settings.gradle.kts` | Stonecutter plugin setup + version list |
-| `stonecutter.gradle.kts` | Auto-generated controller (sets active version) |
-| `gradle.properties` | Mod metadata + `stonecutter_versions` list |
-| `versions/*/gradle.properties` | Per-version dependency pinning (do NOT edit code here) |
+| Path                           | Purpose                                                              |
+| ------------------------------ | -------------------------------------------------------------------- |
+| `src/`                         | All source code (Java + resources) — the **only** place to edit code |
+| `build.gradle.kts`             | Shared build script — runs once per version target                   |
+| `settings.gradle.kts`          | Stonecutter plugin setup + version list                              |
+| `stonecutter.gradle.kts`       | Auto-generated controller (sets active version)                      |
+| `gradle.properties`            | Mod metadata + `stonecutter_versions` list                           |
+| `versions/*/gradle.properties` | Per-version dependency pinning (do NOT edit code here)               |
 
 ## 4. Switching Active Versions
 
@@ -55,7 +55,7 @@ Replace `1.21.9` with any supported version. In IntelliJ IDEA, you can also inst
 
 When APIs change between Minecraft versions, use **Stonecutter comment macros** (`//?`). Never use reflection or runtime version checks.
 
-### Example — a method renamed in 26.1:
+### Example — a method renamed in 26.1
 
 ```java
 public void drawText(...) {
@@ -70,11 +70,11 @@ The inactive branch is commented out with `/* */`. Stonecutter automatically unc
 
 ### Macro syntax cheat sheet
 
-| Syntax | Scope |
-|---|---|
-| `//? if >=26.1` | Next **single line** only |
-| `//? if >=26.1 { ... //?}` | **Multi-line block** |
-| `//? if >=26.1 { ... //?} else { ... //?}` | **If/else block** |
+| Syntax                                     | Scope                     |
+| ------------------------------------------ | ------------------------- |
+| `//? if >=26.1`                            | Next **single line** only |
+| `//? if >=26.1 { ... //?}`                 | **Multi-line block**      |
+| `//? if >=26.1 { ... //?} else { ... //?}` | **If/else block**         |
 
 For the full Stonecutter syntax reference, see the [Stonecutter documentation](https://stonecutter.kikugie.dev/stonecutter/guide/comments).
 
@@ -108,8 +108,6 @@ private String locatorHeads$getProfileName(GameProfile profile) {
 // Used everywhere else without macros
 String name = locatorHeads$getProfileName(playerInfo.getProfile());
 ```
-
-This pattern is already used in `LocatorHeadsModMenuIntegration.java`, where `translatable()` and `literal()` wrap `Component.translatable()` / `Component.literal()` — if Mojang ever renames `Component`, only the two helper methods need updating.
 
 ## 6. Managing Dependencies
 
