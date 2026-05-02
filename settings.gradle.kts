@@ -19,7 +19,7 @@ val stonecutterVersions = (providers.gradleProperty("stonecutter_versions").getO
 stonecutter {
     create(rootProject) {
         versions(stonecutterVersions)
-        vcsVersion = "26.1"   // Git commits are normalized against 26.1
+        vcsVersion = "26.1"
     }
 }
 

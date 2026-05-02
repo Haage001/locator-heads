@@ -1,12 +1,24 @@
+// ┌──────────────────────────────────────────────────────────────────────┐
+// │  build.gradle.kts — Unified Build Script                           │
+// │  Uses Stonecutter syntax to branch between 26.1+ and legacy versions │
+// └──────────────────────────────────────────────────────────────────────┘
+
 plugins {
-    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT"
+    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT" apply false
     id("maven-publish")
-    id("com.modrinth.minotaur") version "2.8.7"
+    id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
-// ── Stonecutter version context ──────────────────────────────────────
 val targetVersion = sc.current.version
-val isModern = sc.current.parsed >= "26.1"
+val isModern = targetVersion.startsWith("26")
+val javaVer = if (isModern) 25 else 21
+
+if (isModern) {
+    apply(plugin = "net.fabricmc.fabric-loom")
+} else {
+    apply(plugin = "net.fabricmc.fabric-loom-remap")
+}
 
 version = "${property("mod_version")}+${targetVersion}"
 group = property("maven_group") as String
@@ -20,52 +32,47 @@ repositories {
     maven("https://maven.shedaniel.me/") { name = "Shedaniel" }
 }
 
-// Access the Loom extension (applied-script safe)
 val loom = project.extensions.getByName<net.fabricmc.loom.api.LoomGradleExtensionAPI>("loom")
-
-loom.apply {
-    @Suppress("UnstableApiUsage")
-    fabricApi {
-        configureDataGeneration {
-            client = true
-        }
-    }
-}
 
 dependencies {
     "minecraft"("com.mojang:minecraft:${property("minecraft_version")}")
-    // Only obfuscated versions need Mojang mappings; Loom 1.15 treats
-    // 1.21.11+ as non-obfuscated and will reject mappings for them.
-    if (sc.current.parsed <= "1.21.9") {
+    
+    if (isModern) {
+        implementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
+        implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
+    } else {
+        @Suppress("UnstableApiUsage")
         "mappings"(loom.officialMojangMappings())
-    }
-    implementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
-    implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
-
-    compileOnly("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_config_version")}") {
-        exclude(group = "net.fabricmc.fabric-api")
+        "modImplementation"("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
+        "modImplementation"("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
     }
 
-    compileOnly("com.terraformersmc:modmenu:${property("modmenu_version")}")
+    if (isModern) {
+        compileOnly("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_config_version")}") {
+            exclude(group = "net.fabricmc.fabric-api")
+        }
+        compileOnly("com.terraformersmc:modmenu:${property("modmenu_version")}")
+    } else {
+        "modCompileOnly"("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_config_version")}") {
+            exclude(group = "net.fabricmc.fabric-api")
+        }
+        "modCompileOnly"("com.terraformersmc:modmenu:${property("modmenu_version")}")
+    }
 }
 
-// ── Resource processing (property injection into fabric.mod.json) ────
 tasks.processResources {
     inputs.property("version", project.version)
 
     filesMatching("fabric.mod.json") {
-        val loaderVer = property("fabric_loader_version").toString()
-        val clothVer  = property("cloth_config_version").toString()
-        val modmenuVer = property("modmenu_version").toString()
-
-        val mcDep   = findProperty("minecraft_dependency")?.toString()
-            ?: if (isModern) ">=26.1" else ">=1.21"
-        val javaDep = if (isModern) ">=25" else ">=21"
+        val loaderVer = project.property("fabric_loader_version").toString()
+        val clothVer  = project.property("cloth_config_version").toString()
+        val modmenuVer = project.property("modmenu_version").toString()
+        val mcDep = findProperty("minecraft_dependency")?.toString() ?: ">=26.1"
 
         expand(mutableMapOf(
             "version" to project.version,
             "minecraft_dependency" to mcDep,
-            "java_dependency" to javaDep,
+            "java_dependency" to if (isModern) ">=25" else ">=21",
             "fabric_loader_dependency" to ">=$loaderVer",
             "cloth_config_dependency" to ">=$clothVer",
             "modmenu_dependency" to ">=$modmenuVer"
@@ -73,21 +80,13 @@ tasks.processResources {
     }
 }
 
-// ── Java toolchain: 26.x needs Java 25, legacy needs Java 21 ────────
 tasks.withType<JavaCompile>().configureEach {
-    //? if >=26.1
-    options.release.set(25)
-    //? if <=1.21.11
-    //options.release.set(21)
+    options.release.set(javaVer)
 }
 
 java {
     withSourcesJar()
-
-    //? if >=26.1
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
-    //? if <=1.21.11
-    //toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(javaVer))
 }
 
 tasks.jar {
@@ -97,26 +96,31 @@ tasks.jar {
     }
 }
 
-// ── Modrinth publishing ─────────────────────────────────────────────
-modrinth {
-    token.set(System.getenv("MODRINTH_TOKEN"))
-    projectId.set("locator-heads")
-    versionNumber.set("${property("mod_version")}+${targetVersion}")
-    versionType.set("release")
+publishMods {
+    file = tasks.jar.flatMap { it.archiveFile }
+    changelog = rootProject.file("CHANGELOG.md").readText()
+    type = STABLE
+    modLoaders.add("fabric")
 
-    afterEvaluate {
-        tasks.findByName("remapJar")?.let {
-            uploadFile.set(it)
-        }
+    // Read compatible versions from versions/*/gradle.properties
+    // When a new hotfix drops, just add it to the comma-separated list there
+    val compatibleVersions = (property("compatible_versions") as String).split(",")
+
+    modrinth {
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        projectId = "locator-heads"
+        minecraftVersions.addAll(compatibleVersions)
     }
-
-    gameVersions.add(targetVersion)
-    //? if <=1.21.7
-    //gameVersions.add("1.21.8")
-    loaders.add("fabric")
 }
 
-// ── Maven publishing ────────────────────────────────────────────────
+afterEvaluate {
+    tasks.findByName("remapJar")?.let { remapTask ->
+        publishMods {
+            file = (remapTask as org.gradle.jvm.tasks.Jar).archiveFile
+        }
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {

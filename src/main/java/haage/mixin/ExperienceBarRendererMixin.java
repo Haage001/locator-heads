@@ -3,7 +3,10 @@ package haage.mixin;
 import haage.LocatorHeads;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+//? if >=26.1
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+//? if <=1.21.11
+/*import net.minecraft.client.gui.GuiGraphics;*/
 import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import org.spongepowered.asm.mixin.Final;
@@ -34,8 +37,13 @@ public abstract class ExperienceBarRendererMixin {
      @param deltaTracker The delta tracker for animation timing
      @param ci Callback info for the injection
      */
+    //? if >=26.1 {
     @Inject(method = "*", at = @At("RETURN"))
     private void locatorHeads$addLocatorOverlayToExperienceBar(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    //?} else {
+    /*@Inject(method = "render", at = @At("RETURN"))
+    private void locatorHeads$addLocatorOverlayToExperienceBar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {*/
+    //?}
         // Only proceed if config is loaded and feature is enabled
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.alwaysShowXP || !LocatorHeads.CONFIG.enableMod) {
             return;
@@ -43,6 +51,9 @@ public abstract class ExperienceBarRendererMixin {
         
         // Render only locator markers. Drawing locator background here would hide the XP bar.
         LocatorBarRenderer renderer = new LocatorBarRenderer(this.minecraft);
+        //? if >=26.1
         renderer.extractRenderState(guiGraphics, deltaTracker);
+        //? if <=1.21.11
+        /*renderer.render(guiGraphics, deltaTracker);*/
     }
 }

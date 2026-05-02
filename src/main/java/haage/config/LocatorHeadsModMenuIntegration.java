@@ -7,10 +7,7 @@ import haage.LocatorHeads;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-//? if >=26.1
 import net.minecraft.network.chat.Component;
-//? if <=1.21.11
-/*import net.minecraft.text.Text;*/
 
 public class LocatorHeadsModMenuIntegration implements ModMenuApi {
 
@@ -146,11 +143,6 @@ public class LocatorHeadsModMenuIntegration implements ModMenuApi {
         };
     }
 
-    //? if >=26.1 {
     private static Component translatable(String key) { return Component.translatable(key); }
     private static Component literal(String text) { return Component.literal(text); }
-    //?} else {
-    /*private static Text translatable(String key) { return Text.translatable(key); }
-    private static Text literal(String text) { return Text.literal(text); }
-    *///?}
 }

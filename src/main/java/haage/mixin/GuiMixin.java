@@ -48,7 +48,11 @@ public class GuiMixin {
     @Inject(method = "extractRenderState", at = @At("RETURN"))
     //? if <=1.21.11
     /*@Inject(method = "render", at = @At("RETURN"))*/
-    private void locatorHeads$renderCompass(/*? if >=26.1 {*/ GuiGraphicsExtractor /*?} else {*/ /*GuiGraphics*/ /*?}*/ guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    //? if >=26.1 {
+    private void locatorHeads$renderCompass(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    //?} else {
+    /*private void locatorHeads$renderCompass(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {*/
+    //?}
         if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.enableMod || !LocatorHeads.CONFIG.showCompass) {
             return;
         }
@@ -92,7 +96,11 @@ public class GuiMixin {
         }
     }
     
-    private void locatorHeads$drawCardinalDirection(/*? if >=26.1 {*/ GuiGraphicsExtractor /*?} else {*/ /*GuiGraphics*/ /*?}*/ guiGraphics, int centerX, int compassY, float playerYaw, String direction, float directionAngle) {
+    //? if >=26.1 {
+    private void locatorHeads$drawCardinalDirection(GuiGraphicsExtractor guiGraphics, int centerX, int compassY, float playerYaw, String direction, float directionAngle) {
+    //?} else {
+    /*private void locatorHeads$drawCardinalDirection(GuiGraphics guiGraphics, int centerX, int compassY, float playerYaw, String direction, float directionAngle) {*/
+    //?}
         // Normalize angles
         float normalizedYaw = ((playerYaw % 360) + 360) % 360;
         float angleDiff = directionAngle - normalizedYaw;

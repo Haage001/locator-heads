@@ -2,32 +2,46 @@
 
 Thank you for your interest in contributing! This project uses a **Unified Multi-Version** architecture powered by [Stonecutter](https://stonecutter.kikugie.dev/). All Minecraft versions compile from the **same source files** — we do NOT maintain separate Git branches for different versions.
 
+> **For AI / LLM agents:** See [`AGENTS.md`](AGENTS.md) for machine-actionable directives, precise API boundaries, and research methodology.
+
 ---
 
-## 1. Supported Versions
-
-| Build Target | Covers | Notable API Changes |
-|---|---|---|
-| **1.21.7** | 1.21.7, 1.21.8 | Rendering extracts data before drawing; block entity serialization changes |
-| **1.21.9** | 1.21.9, 1.21.10 | Rendering reworked to use render states; key binding category changes |
-| **1.21.11** | 1.21.11 | Gamerules use registries; `ResourceLocation` → `Identifier`; RenderTypes relocated |
-| **26.1** | 26.1, 26.1.1, 26.1.2 | Java 25; new `guiGraphics.text()` API; major package restructure |
-
-A `versions/26.2/` staging directory exists for the upcoming snapshot, but is **not** built until Fabric support is published.
-
-## 2. Environment Setup
-
-Clone the repository and run Gradle sync. Stonecutter automatically creates subprojects for each version target:
+## 1. Quick Start
 
 ```bash
+git clone https://github.com/Haage001/locator-heads.git
+cd locator-heads
+
 # Build all 4 version jars
 .\gradlew.bat build        # Windows
 ./gradlew build            # Mac / Linux
 ```
 
-The project root `src/` directory is where all source code lives. **Do not** edit files inside `versions/*/` — those directories only contain `gradle.properties` for per-version dependency pinning.
+The build produces one jar per Minecraft version targeted in `versions/*/build/libs/`.
 
-## 3. Switching Active Versions
+## 2. Supported Versions
+
+| Build Target | Covers Minecraft Versions |
+|---|---|
+| **1.21.7** | 1.21.7, 1.21.8 |
+| **1.21.9** | 1.21.9, 1.21.10 |
+| **1.21.11** | 1.21.11 |
+| **26.1** | 26.1, 26.1.1, 26.1.2 |
+
+For detailed API changes at each version boundary, see the [Version Coverage table in AGENTS.md](AGENTS.md#version-coverage).
+
+## 3. Project Structure
+
+| Path | Purpose |
+|---|---|
+| `src/` | All source code (Java + resources) — the **only** place to edit code |
+| `build.gradle.kts` | Shared build script — runs once per version target |
+| `settings.gradle.kts` | Stonecutter plugin setup + version list |
+| `stonecutter.gradle.kts` | Auto-generated controller (sets active version) |
+| `gradle.properties` | Mod metadata + `stonecutter_versions` list |
+| `versions/*/gradle.properties` | Per-version dependency pinning (do NOT edit code here) |
+
+## 4. Switching Active Versions
 
 Your IDE indexes code against one Minecraft version at a time. To switch which version is "active" (controls IntelliSense/code highlighting):
 
@@ -37,17 +51,11 @@ Your IDE indexes code against one Minecraft version at a time. To switch which v
 
 Replace `1.21.9` with any supported version. In IntelliJ IDEA, you can also install the [Stonecutter Plugin](https://plugins.jetbrains.com/plugin/25044-stonecutter-dev) for a visual dropdown.
 
-## 4. How to Write Code
-
-### Where to edit
-
-All code lives in `src/main/java/` and `src/main/resources/`. This single codebase compiles for every target version.
-
-### Handling Version Differences
+## 5. How to Write Version-Specific Code
 
 When APIs change between Minecraft versions, use **Stonecutter comment macros** (`//?`). Never use reflection or runtime version checks.
 
-**Example — a method renamed in 26.1:**
+### Example — a method renamed in 26.1:
 
 ```java
 public void drawText(...) {
@@ -60,50 +68,74 @@ public void drawText(...) {
 
 The inactive branch is commented out with `/* */`. Stonecutter automatically uncomments the correct code during compilation.
 
-**How it works:**
-- `//? if >=26.1` — the **next line** is included only when building for 26.1+
-- `//? if <=1.21.11` — the **next line** (which is a block comment) is uncommented for legacy builds
-- `//? if >=26.1 { ... //?}` — a **multi-line block** included only for 26.1+
+### Macro syntax cheat sheet
 
-### Handling Resource Files (JSON)
+| Syntax | Scope |
+|---|---|
+| `//? if >=26.1` | Next **single line** only |
+| `//? if >=26.1 { ... //?}` | **Multi-line block** |
+| `//? if >=26.1 { ... //?} else { ... //?}` | **If/else block** |
+
+For the full Stonecutter syntax reference, see the [Stonecutter documentation](https://stonecutter.kikugie.dev/stonecutter/guide/comments).
+
+### What causes macros? (Important when adding a new MC version)
+
+Every macro in this codebase exists because Mojang changed an API between versions. The current boundaries are documented in detail in the [Three API Boundaries section of AGENTS.md](AGENTS.md#three-api-boundaries), but **new boundaries will appear** when future Minecraft versions ship breaking changes.
+
+When adding support for a new version (e.g., 26.2), watch for these common sources of breakage:
+
+1. **Class/method renames** — Mojang periodically renames classes (e.g., `ResourceLocation` → `Identifier` in 1.21.11) or methods (e.g., `drawString()` → `text()` in 26.1). These require import and call-site macros.
+2. **Third-party library upgrades** — `com.mojang.authlib` is bundled with Minecraft but versioned independently. When it upgraded from 6.x to 7.x, `GameProfile` changed from a class to a Java Record, breaking `getName()` → `name()`. Check `javap` on the authlib JAR.
+3. **Method signature changes** — Mojang sometimes adds or removes parameters from internal methods that mixins target. Use `mappings.tiny` to verify parameter counts.
+4. **Rendering pipeline restructure** — 26.1 replaced `GuiGraphics` with `GuiGraphicsExtractor` and changed mixin targets from obfuscated names to wildcards.
+
+**Don't guess** — verify against actual data. The [Research section of AGENTS.md](AGENTS.md#research-how-to-verify-api-changes) explains how to use git history, mappings files, and `javap` to confirm what changed.
+
+### Reducing Macro Repetition
+
+If you find yourself repeating the same `//? if` macro at every call site for the same API change, **write a helper method instead**. Put the conditional logic in one place, then call your helper everywhere:
+
+```java
+// One-time bridge — the only place the macro lives
+@Unique
+private String locatorHeads$getProfileName(GameProfile profile) {
+    //? if >=1.21.9
+    return profile.name();
+    //? if <=1.21.7
+    /*return profile.getName();*/
+}
+
+// Used everywhere else without macros
+String name = locatorHeads$getProfileName(playerInfo.getProfile());
+```
+
+This pattern is already used in `LocatorHeadsModMenuIntegration.java`, where `translatable()` and `literal()` wrap `Component.translatable()` / `Component.literal()` — if Mojang ever renames `Component`, only the two helper methods need updating.
+
+## 6. Managing Dependencies
+
+Each version target has its own `versions/<version>/gradle.properties` with pinned dependency versions. **Never** hardcode versions in `build.gradle.kts`.
+
+```
+versions/1.21.7/gradle.properties  → fabric_api_version=0.129.0+1.21.7
+versions/26.1/gradle.properties    → fabric_api_version=0.144.4+26.1
+```
+
+In `build.gradle.kts`, these are referenced with `property("fabric_api_version")`. Stonecutter injects the correct values per build target.
+
+## 7. Handling Resource Files (JSON)
 
 JSON doesn't support comments, so we use **property injection** via Gradle:
 
 1. Use `${variable_name}` placeholders in `fabric.mod.json`
 2. Define the logic in `build.gradle.kts` inside `tasks.processResources`
 
-## 5. Managing Version-Specific Dependencies
+## 8. Learning Resources
 
-Each version target has its own `versions/<version>/gradle.properties` file with the exact dependency versions:
+If you're new to Fabric modding or the tools used in this project:
 
-```
-versions/1.21.7/gradle.properties  → fabric_api_version=0.129.0+1.21.7
-versions/1.21.9/gradle.properties  → fabric_api_version=0.134.1+1.21.9
-versions/1.21.11/gradle.properties → fabric_api_version=0.141.3+1.21.11
-versions/26.1/gradle.properties    → fabric_api_version=0.144.4+26.1
-```
-
-In `build.gradle.kts`, these are referenced with `property("fabric_api_version")`. Stonecutter injects the correct values per build target.
-
-## 6. Key Files
-
-| File | Purpose |
-|---|---|
-| `src/` | All source code (Java + resources) |
-| `build.gradle.kts` | Shared build script — runs once per version target |
-| `settings.gradle.kts` | Stonecutter plugin setup + version list |
-| `stonecutter.gradle.kts` | Auto-generated controller (sets active version) |
-| `gradle.properties` | Mod metadata + `stonecutter_versions` list |
-| `versions/*/gradle.properties` | Per-version dependencies |
-
----
-
-## 🤖 Instructions for AI / LLM Code Assistants
-
-If you are an agent reading this file, strictly follow these rules:
-
-1. **Single Branch:** All versions compile from the same `src/` directory. Never suggest separate branches.
-2. **Stitcher Syntax:** Handle API differences with `//? if` macros. Never use `Class.forName()` or runtime version checks.
-3. **No Hardcoded Versions:** Dependencies are in `versions/*/gradle.properties`, not in `build.gradle.kts`.
-4. **Build Verification:** Run `./gradlew build` — Stonecutter handles all 4 targets sequentially.
-5. **Use `sc.current`:** In `build.gradle.kts`, use `sc.current.version` (String) and `sc.current.parsed` (comparison) instead of environment variables.
+- [Fabric Wiki — Getting Started](https://fabricmc.net/wiki/start) — Setting up a Fabric mod development environment
+- [Fabric Wiki — Mixins](https://fabricmc.net/wiki/tutorial:mixin_introduction) — Introduction to Mixin injection
+- [SpongePowered Mixin Wiki](https://github.com/SpongePowered/Mixin/wiki) — Detailed Mixin documentation
+- [Stonecutter Documentation](https://stonecutter.kikugie.dev/) — Multi-version compilation with comment macros
+- [Fabric Loom](https://fabricmc.net/wiki/documentation:fabric_loom) — The Gradle plugin that handles mappings, remapping, and mod packaging
+- [Mojang Mappings (Mojmap)](https://minecraft.wiki/w/Obfuscation_map) — This project uses official Mojang mappings, not Yarn
