@@ -29,7 +29,9 @@ public class GuiMixin {
      */
     @Inject(method = "*()Z", at = @At("RETURN"), cancellable = true)
     private void locatorHeads$alwaysShowExperienceBar(CallbackInfoReturnable<Boolean> cir) {
-        if (LocatorHeads.CONFIG != null && LocatorHeads.CONFIG.alwaysShowXP) {
+        if (LocatorHeads.CONFIG != null && LocatorHeads.CONFIG.alwaysShowXP
+                && this.minecraft.player != null
+                && !this.minecraft.player.isPassenger()) {
             cir.setReturnValue(true);
         }
     }

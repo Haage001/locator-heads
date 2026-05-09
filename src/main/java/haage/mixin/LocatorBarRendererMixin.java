@@ -57,11 +57,8 @@ public class LocatorBarRendererMixin {
                     return;
                 }
 
-                Integer maxDistance = LocatorHeads.CONFIG.getMaxPlayerMarkerDistance();
-                Entity cameraEntity = this.minecraft.getCameraEntity();
-                if (maxDistance != null && cameraEntity != null) {
-                    double maxDistanceSquared = (double) maxDistance * maxDistance;
-                    if (trackedWaypoint.distanceSquared(cameraEntity) > maxDistanceSquared) {
+                if (LocatorHeads.CONFIG.onlyShowNearbyPlayerHeads) {
+                    if (level == null || level.getPlayerByUUID(playerInfo.getProfile().id()) == null) {
                         this.locatorHeads$shouldHideWaypoint = true;
                         return;
                     }

@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.3.0]
+### Added
+- Added "Only Show Nearby Player Heads" toggle under General.
+
+### Changed
+- Removed custom player marker distance.
+
+### Fixed
+- Fixed player heads not showing while riding a horse when "Always Show XP Bar" is enabled ([#15](https://github.com/Haage001/locator-heads/issues/15)).
+
 ## [2.2.0]
 ### Added
 - Added "Player marker distence" option under General (empty = infinite distance).
