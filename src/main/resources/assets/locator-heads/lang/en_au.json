@@ -1,0 +1,10 @@
+{
+  "option.locator-heads.compass_color": "Compass Letter Colour",
+  "option.locator-heads.enable_team_border.@Tooltip": "Displays coloured borders around player head icons.",
+  "option.locator-heads.border_style": "Border Colour Mode",
+  "option.locator-heads.static_border_color": "Static Border Colour",
+  "enum.locator-heads.border_style.team_color": "Team Colour",
+  "enum.locator-heads.border_style.static_color": "Static Colour",
+  "option.locator-heads.render_heads.@Tooltip": "Renders player head icons on the locator bar instead of vanilla coloured dots.",
+  "option.locator-heads.enable_mod.@Tooltip": "Toggles all mod features. Turning off restores vanilla behaviour."
+}
