@@ -5,6 +5,7 @@
 	"client": [
 		"ExperienceBarRendererMixin",
 		"GuiMixin",
+		"HudMixin",
 		"LocatorBarRendererMixin"
 	],
 	"injectors": {

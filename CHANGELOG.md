@@ -1,11 +1,15 @@
 # Changelog
 
+## [2.4.0]
+### Changed
+- Updated to 26.2.
+
 ## [2.3.0]
 ### Added
-- Added "Only Show Nearby Player Heads" toggle under General.
+- Added "Only Show Nearby Player Heads" toggle under General ([#24](https://github.com/Haage001/locator-heads/issues/24)).
 
 ### Changed
-- Removed custom player marker distance.
+- Removed custom player marker distance ([#24](https://github.com/Haage001/locator-heads/issues/24)).
 
 ### Fixed
 - Fixed player heads not showing while riding a horse when "Always Show XP Bar" is enabled ([#15](https://github.com/Haage001/locator-heads/issues/15)).
@@ -84,3 +88,6 @@
 ### Fixed
 - Fixed crash when Cloth Config is not installed
 - Compass now hides when menus are open (ESC, inventory, etc.)
+
+---
+Note: Changelog entries use three sections: Added, Changed, and Fixed. Only sections with real updates should contain bullet points.

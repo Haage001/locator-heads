@@ -4,8 +4,8 @@ import haage.LocatorHeads;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
-import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
+import net.minecraft.client.gui.contextualbar.ExperienceBar;
+import net.minecraft.client.gui.contextualbar.LocatorBar;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Mixin for ExperienceBarRenderer to add support for simultaneous display
  * of both XP bar and locator heads when the "Always Show XP" feature is enabled.
  */
-@Mixin(ExperienceBarRenderer.class)
+@Mixin(ExperienceBar.class)
 public abstract class ExperienceBarRendererMixin {
     
     @Shadow
@@ -42,7 +42,7 @@ public abstract class ExperienceBarRendererMixin {
         }
         
         // Render only locator markers. Drawing locator background here would hide the XP bar.
-        LocatorBarRenderer renderer = new LocatorBarRenderer(this.minecraft);
+        LocatorBar renderer = new LocatorBar(this.minecraft);
         renderer.extractRenderState(guiGraphics, deltaTracker);
     }
 }
