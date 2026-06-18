@@ -34,10 +34,12 @@ public abstract class ExperienceBarRendererMixin {
      @param deltaTracker The delta tracker for animation timing
      @param ci Callback info for the injection
      */
-    @Inject(method = "*", at = @At("RETURN"))
+    @Inject(method = "extractRenderState", at = @At("RETURN"))
     private void locatorHeads$addLocatorOverlayToExperienceBar(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         // Only proceed if config is loaded and feature is enabled
-        if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.alwaysShowXP || !LocatorHeads.CONFIG.enableMod) {
+        if (LocatorHeads.CONFIG == null || !LocatorHeads.CONFIG.alwaysShowXP || !LocatorHeads.CONFIG.enableMod
+                || this.minecraft.level == null
+                || this.minecraft.getCameraEntity() == null) {
             return;
         }
         

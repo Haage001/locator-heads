@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.4.1]
+### Fixed
+- Fixed singleplayer world creation getting stuck on the loading screen ([#27](https://github.com/Haage001/locator-heads/issues/27)).
+
 ## [2.4.0]
 ### Changed
 - Updated to 26.2.

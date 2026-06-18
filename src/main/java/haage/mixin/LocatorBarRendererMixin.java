@@ -41,6 +41,13 @@ public class LocatorBarRendererMixin {
             this.locatorHeads$shouldHideWaypoint = false;
             return;
         }
+        if (level == null || entity == null || this.minecraft.level == null || this.minecraft.getCameraEntity() == null) {
+            this.locatorHeads$skinOverride = null;
+            this.locatorHeads$currentWaypoint = null;
+            this.locatorHeads$playerName = null;
+            this.locatorHeads$shouldHideWaypoint = true;
+            return;
+        }
         this.locatorHeads$currentWaypoint = trackedWaypoint;
         this.locatorHeads$skinOverride = null;
         this.locatorHeads$teamColor = 0xFFFFFF;
@@ -90,7 +97,7 @@ public class LocatorBarRendererMixin {
 
     @Unique
     private void locatorHeads$renderPlayerHead(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height) {
-        if (LocatorHeads.CONFIG == null || LocatorHeads.CONFIG.teamBorderThickness == null) return;
+        if (LocatorHeads.CONFIG == null || LocatorHeads.CONFIG.teamBorderThickness == null || this.minecraft.level == null || this.minecraft.getCameraEntity() == null) return;
 
         float distance = Mth.sqrt((float)this.locatorHeads$currentWaypoint.distanceSquared(this.minecraft.getCameraEntity()));
         Waypoint.Icon icon = this.locatorHeads$currentWaypoint.icon();
