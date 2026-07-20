@@ -28,22 +28,25 @@ is a client-side Minecraft mod that displays nearby players as heads on your XP 
 <details>
 <summary><h2>🎭 General Settings</h2></summary>
 
-- Enable/Disable Mod
-  Chose weather or not mod is on or off.
-- Render Heads
+- Enable/Disable Mod  
+  Chose whether or not mod is on or off.
+- Show Player Heads  
   Choose if you want heads to be rendered (can be used to only show names)
-- Always show XP bar
-- Head Size
-  Change the size of the heads
-- Show Player Names
+- Always Show XP Bar  
+- Head Size  
+  Change the size of the heads.
+- Show Player Names  
+  Choose when names should appear above player heads.
+- Only Show Nearby Player Heads  
+  Only show heads for players loaded on your client (around 200–300 blocks).
 
 <div align="center">
 
-| Player Name Option | Description                                                      |
+| Player Name Option | Description                                                  |
 | -------------- | ---------------------------------------------------------------- |
 | **Never**      | No names on the locator bar. _(default)_                         |
 | **Always**     | Names permanently visible above all player heads.                |
-| **Looking At** | Names appear only when you look within a 30°                     |
+| **Looking At** | Names appear only when you look within 30° of a player.     |
 | **Player List**| Names show when the in-game player list is open.                 |
 
   <img
@@ -84,12 +87,14 @@ src="https://cdn.modrinth.com/data/cached_images/d8d7b61b70d561e5a4e591dab57fcdd
 <details>
 <summary><h2>🧭 Compass</h2></summary>
 
-- Show Compass
-  Toggle the compass overlay on or off
-- Compass Colour
-  Customize the color of the compass direction letters using hex color picker
-- Compass Shadow
-  Toggle black outline around compass letters for better visibility
+- Compass Heading Overlay  
+  Toggle the compass overlay on or off.
+- Compass Text Color  
+  Customize the color of the compass direction letters using a hex color picker.
+- Compass Text Shadow  
+  Toggle a shadow behind compass letters for better visibility.
+- Use Axis Instead of Compass Labels  
+  Replaces compass headings with coordinate axis notation (X, Z).
 
 <div align="center">
   <img
@@ -112,14 +117,14 @@ src="https://cdn.modrinth.com/data/cached_images/d8d7b61b70d561e5a4e591dab57fcdd
 <details>
 <summary><h2>🎨 Borders</h2></summary>
 
-- Enable Border
-  If enabled the border is on
-- Border Thickness
-  How many pixels thick the border should be
-- Border Style
-  Can be eithere "TEAM_COLOUR" or "STATIC_COLOUR"
-- Static Border Colour
-  Choose what colour the static border will have
+- Show Head Borders  
+  Displays colored borders around player head icons.
+- Border Thickness  
+  How thick the border should be.
+- Border Color Mode  
+  Can be either "Team Color" or "Static Color".
+- Static Border Color  
+  Choose what color the static border will have.
 
 
 <div align="center">
@@ -154,6 +159,9 @@ choose who appear on your locator bar:
   Display only the players listed in your filter.
 - **Exclude Only**  
   Hide only the players listed, showing all others.
+
+> [!TIP]
+> Choose whether to include or exclude listed players using the **Player Filtering** dropdown.
 
 **Filter Syntax**  
 - Separate names by commas (`,`), semicolons (`;`), colons (`:`), or periods (`.`).  

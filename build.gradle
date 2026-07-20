@@ -72,8 +72,9 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	targetCompatibility = JavaVersion.VERSION_25
-	sourceCompatibility = JavaVersion.VERSION_25
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
 }
 
 jar {
